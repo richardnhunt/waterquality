@@ -21,6 +21,9 @@ import numpy as np
 # SELECT CONFIGURATION
 # ====================
 import cfg_arag as cfg
+#import cfg_teme as cfg
+#import cfg_severn as cfg
+#import cfg_safeavon as cfg
 
 # Set to 1 for one-off test
 TEST = 0
