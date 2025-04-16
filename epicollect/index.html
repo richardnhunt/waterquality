@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>River Pollution Levels - Avonvale River</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+        
+        /* Page container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #2c5e4e;
+            font-size: 2em;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        p {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            background: #e7f5f0;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #2c5e4e;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        ul li b {
+            color: #2c5e4e;
+        }
+
+        /* Styling for the map container */
+        #map {
+            height: 800px;
+            width: 100%;
+            margin-top: 30px;
+            border: 1px solid #ccc;
+        }
+
+        a {
+            color: #2c5e4e;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>River Sampling</h1>
+
+        <p>The map below shows sampling results by the <a href="https://avonvaleriver.org/">Avonvale River Action Group</a> and other concerned groups in the area. These are obtained by volunteers who regularly sample and upload their numbers to the <a href="https://anglingtrust.net/get-involved/anglers-against-pollution/wqmn/">Angling Trust's Water Quality Monitoring Network</a>.  The graphs below are then generated from an export of that data with an expectation to update them here monthly.</p>
+
+        <p>This data should not be used to determine river safety but instead viewed as an indicator of general trends in river health.</p>
+
+        <p>Three key pollutants are displayed when you click on a location, along with a "good" threshold for comparison:</p>
+        
+        <ul>
+            <li><b>Conductivity</b> measurements reflect the amount of dissolved salts and minerals in the river, with higher levels often indicating pollution from urban runoff, industrial discharge, or agricultural activities, which can impact water quality and aquatic life.
+            <li><b>Phosphates</b> often stem from fertilizers, detergents, and wastewater, and elevated levels contribute to harmful algal blooms, disrupting the ecosystem and water quality.
+            <li><b>Nitrates</b> in rivers primarily come from agricultural runoff and sewage, and high levels can lead to excessive algae growth, depleting oxygen and harming aquatic life.
+            <li><b>Ammonia</b> often indicates pollution from agricultural runoff, sewage, or industrial waste, signaling poor water quality and potential harm to aquatic life. Elevated ammonia levels can pose health risks to humans.
+        </ul>
+        
+        <p>For purposes of graph visibility, conductivity readings are clipped at 3000</p>
+        
+        <div id="map"></div>
+    </div>
+    <div>
+        <h1>Discharge points</h1>
+        <p>For some known outfall locations into the Avon, please refer to <a href="https://www.google.co.uk/maps/@52.1412473,-2.1981324,10z/data=!4m2!6m1!1s1gG-L06hy_oDEqmKIlBoWtjHh6odRkLY?entry=ttu&g_ep=EgoyMDI0MTAwMi4xIKXMDSoASAFQAw%3D%3D" target="_blank">this map here</a>.  It will open in a new tab and you can click the different source types down the left.</p>
+        
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-sDyfc6N5CaKAfac81w-5kXF4dIcTLZY"></script>
+    <script>
+        function initMap() {
+            // Create the map centered on a default location (latitude, longitude)
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat:  52.108816, lng:  -2.000528 },
+                zoom: 10
+            });
+
+            var kml_url = "https://mycloudbase.com/avonvale/river_overview.kml?dummy="+(new Date()).getTime();
+            var kmlLayer = new google.maps.KmlLayer({
+                url: kml_url,
+                map: map
+            });
+        }
+    </script>
+</body>
+<body onload="initMap()">
+    <div id="map"></div>
+</body>
+</html>
