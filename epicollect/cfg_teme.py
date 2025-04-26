@@ -35,6 +35,8 @@ RIVER_NAMES = [ ("Teme", "Teme")
 # We map some names for consitency, include the location number if there is one (will be then stripped out)
 # Names get changed to the first one in the list
 SYNONYMS = [
+("Bransford Bridge","Bransford bridge"),
+("Black Bridge","Black bridge"),
            ]
 
 # Locations which have a number
