@@ -55,7 +55,9 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge"),
              ("108 B4510 Bridge", "200 B4510 bridge"),
              ("245 Cropthorne Main Street, Bridge", "245 Cropthorne Main Street Bridge"),
              ("280 Pershore, Bridges", "Pershore bridges"),
-             ("Rugby, Steam Turbine", "Rugby; Steam Turbine", "Rugby (Steam Turbine)")
+             ("Rugby, Steam Turbine", "Rugby; Steam Turbine", "Rugby (Steam Turbine)"),
+             ("Barford Below","Barford B"),
+             ("Barford Above","Barford A")
            ]
 
 # Locations which have a number
@@ -101,7 +103,9 @@ SAMPLING_LOCATIONS = [
     ("Warwickshire Arrow", 200, "Salford Bridge", 52.16338142682303, -1.8803195030184976),
     ("Alne", 100, "Wootten Warwen (=Pennyford Lane Bridge)", 52.2581988721852, -1.783556704096704),
     ("Alne", 130, "Little Alne", 52.250200998557055, -1.7935596094704758),
-    ("Alne", 150, "Great Alne (Pelham Lane)", 52.23257559455438, -1.8317339626316056)
+    ("Alne", 150, "Great Alne (Pelham Lane)", 52.23257559455438, -1.8317339626316056),
+    ("Warwickshire Avon", 0, "Barford Below", 52.245253, -1.617944),
+    ("Warwickshire Avon", 0, "Barford Above", 52.256291, -1.597904)
 ]
 
 # Thresholds for graphs
