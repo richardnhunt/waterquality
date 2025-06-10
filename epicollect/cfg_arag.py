@@ -29,7 +29,7 @@ COL_ALGAL_BLOOMS = 24
 COL_POLLUTION = 25
 
 # River names we are monitoring, case insensitive, we use the first one
-RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshire river avon", "warks avon", "River Avon Worcs"),
+RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshire river avon", "warks avon", "River Avon Worcs", "Warwickshire  Avon"),
                 ("Warwickshire Arrow", "Arrow", "Warks Arrow"),
                 ("Alne", "River Alne"),
                 ("Isbourne","Isbourne"),
@@ -89,7 +89,7 @@ SAMPLING_LOCATIONS = [
     ("Warwickshire Avon", 245, "Cropthorne Main Street Bridge", 52.100434, -2.007293),
     ("Warwickshire Avon", 250, "Cropthorne, below pump house", 52.103992, -2.020204),
     ("Warwickshire Avon", 255, "Cropthorne strawberry farm", 52.105278, -2.029053),
-    ("Warwickshire Avon", 260, "Lower Moor, Salters Lane/Springs", 52.11427, -2.03578),
+    ("Warwickshire Avon", 260, "Lower Moor, below STW", 52.124358, -2.048519),
     ("Warwickshire Avon", 265, "Wyre Piddle", 52.12369, -2.05767),
     ("Warwickshire Avon", 270, "Pershore, Leisure Centre", 52.112278, -2.071453),
     ("Warwickshire Avon", 205, "Pershore, Bridges", 52.10525, -2.07059),
