@@ -165,7 +165,7 @@ def plot_river_data(location, data, global_limits):
     fig.suptitle(f'{location}', fontsize=label_fontsize, fontweight='bold')
 
     # Save the figure as a PNG file with the location name
-    filename = cfg.OUTPUT_FOLDER +"/" + location.replace('/','_')
+    filename = cfg.OUTPUT_FOLDER + '/' + location.replace('/','_')
     plt.savefig(f'{filename}.png', bbox_inches='tight', pad_inches=0)
 
     if TEST == 1:
@@ -282,7 +282,7 @@ def main():
     print('Generating Google Earth .kml file')
     num_graphs = 0
     num_added_to_kml = 0
-    with open('output/river_overview.kml', 'w') as file:
+    with open(cfg.OUTPUT_FOLDER + '/river_overview.kml', 'w') as file:
         file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         file.write('<kml xmlns="http://www.opengis.net/kml/2.2">\n')
         file.write('  <Document>\n')
@@ -315,7 +315,7 @@ def main():
     # Output cleaned csv
     print('Generating .csv files')
     for location, data in sampling_data.items():
-        filename = 'output/' + location.replace('/','_') + '.csv'
+        filename = cfg.OUTPUT_FOLDER + '/' + location.replace('/','_') + '.csv'
         with open(filename, 'w') as file:
             file.write('name,date,river,place,latitude,longitude,accuracy,location_description,time,river_height,river_flow,weather,recent_rain,reading_conductivity,reading_temperature,reading_phosphates,reading_nitrates,reading_ammonia,reading_algal_blooms,reading_pollution,reading_notes\n')
             for sample in data:
