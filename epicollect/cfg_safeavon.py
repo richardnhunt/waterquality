@@ -2,6 +2,8 @@
 # ========================
 
 INPUT_CSV_FILENAME = 'form-1__data-entry.csv'
+OUTPUT_FOLDER = "safeavon"
+
 COL_RIVER = None
 COL_NAME = 14
 COL_DATE = 13

@@ -2,6 +2,8 @@
 # ===========================
 
 INPUT_CSV_FILENAME = 'form-1__wqmn-water-quality-survey.csv'
+OUTPUT_FOLDER = "arag"
+
 COL_NAME = 4
 COL_DATE = 5
 COL_RIVER = 6

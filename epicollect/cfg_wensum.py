@@ -1,8 +1,8 @@
-# River Severn
-# ============
+# Avonvale River Action Group
+# ===========================
 
 INPUT_CSV_FILENAME = 'form-1__wqmn-water-quality-survey.csv'
-OUTPUT_FOLDER = "severn"
+OUTPUT_FOLDER = "wensum"
 
 COL_NAME = 4
 COL_DATE = 5
@@ -31,20 +31,13 @@ COL_ALGAL_BLOOMS = 24
 COL_POLLUTION = 25
 
 # River names we are monitoring, case insensitive, we use the first one
-RIVER_NAMES = [ ("River Severn", "Severn")
+RIVER_NAMES = [ ("Wensum", "Wensum")
               ]
 
 # We map some names for consitency, include the location number if there is one (will be then stripped out)
 # Names get changed to the first one in the list
-SYNONYMS = [
-             ("Cricket Field Wharf", "Cricket field wharfage"),
-             ("Kempsey Church Meadow", "Kempsey", "Kempsey Ham", "Church meadow kempsey"),
-             ("Bewdley Rowing Club", "Bewdley Boat Club", "Rowing club", "Bewdley Rowing club"),
-             ("Hawksbatch", "Hawkbatch"),
-             ("Ismore Coppice Wroxeter", "Wroxeter"),
-             ("Darwins Lumbargo Sculpture", "Darwin lumbargo sculpture"),
-             ("Ell hole", "El Hole"),
-             ("Rossall Grange Bicton", "Rosall grange"),
+SYNONYMS = [ 
+
            ]
 
 # Locations which have a number
@@ -63,7 +56,7 @@ THRESHOLD_AMMONIA = 0.6
 MAX_CONDUCTIVITY = 3000
 MAX_TEMPERATURE_C = 30
 MAX_PHOSPHATES = 2
-MAX_NITRATES = 10
+MAX_NITRATES = 20
 
 
 # OUTPUT CONFIGURATION

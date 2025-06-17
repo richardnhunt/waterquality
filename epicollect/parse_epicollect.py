@@ -16,19 +16,12 @@ import matplotlib.ticker as mticker
 import matplotlib.dates as mdates
 from datetime import datetime
 import numpy as np
-
-
-# SELECT CONFIGURATION
-# ====================
-#import cfg_wensum as cfg
-import cfg_arag as cfg
-#import cfg_teme as cfg
-#import cfg_severn as cfg
-#import cfg_safeavon as cfg
+import importlib
 
 # Set to 1 for one-off test
 TEST = 0
 
+cfg = None
 
 # INTERNAL DATE
 ###############
@@ -172,7 +165,7 @@ def plot_river_data(location, data, global_limits):
     fig.suptitle(f'{location}', fontsize=label_fontsize, fontweight='bold')
 
     # Save the figure as a PNG file with the location name
-    filename = "output/" + location.replace('/','_')
+    filename = cfg.OUTPUT_FOLDER +"/" + location.replace('/','_')
     plt.savefig(f'{filename}.png', bbox_inches='tight', pad_inches=0)
 
     if TEST == 1:
@@ -332,4 +325,15 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) != 2:
+        print("Usage: python parse_epicollect.py <cfg_file>")
+    else:
+        module_name = sys.argv[1]
+        try:
+            cfg = importlib.import_module(module_name)
+            print(f"Using configuration {module_name}")
+            main()
+        except ModuleNotFoundError:
+            print(f"Module '{module_name}' not found.")
+        except AttributeError as e:
+            print(f"Attribute error: {e}")
