@@ -14,12 +14,15 @@ from collections import namedtuple
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import matplotlib.dates as mdates
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import numpy as np
 import importlib
 
 # Set to 1 for one-off test
 TEST = 0
+
+# If non-zero, disregard any data that doesn't have anything in this many weeks
+ACTIVE_WEEKS_TIME = 0
 
 cfg = None
 
@@ -267,6 +270,7 @@ def main():
     print('Reading in river data')
     read_river_data(cfg.INPUT_CSV_FILENAME)
     global_limits = calculate_global_limits(sampling_data)
+    active_list = defaultdict(list)
 
     # Create the graphs of all sampling locations
     print('Creating graphs')
@@ -275,8 +279,27 @@ def main():
         plot_river_data(location, data, global_limits)
     else:
         for location, data in sampling_data.items():
-            print (location)
-            plot_river_data(location, data, global_limits)
+            # Check if active
+            is_active = False
+            most_recent_weeks_ago = 0
+            for sample_entry in data:
+                timestamp = datetime.strptime(sample_entry.date, "%d/%m/%Y").replace(tzinfo=timezone.utc)
+                now = datetime.now(timezone.utc)
+                weeks_difference = (now - timestamp).total_seconds() / (7 * 24 * 60 * 60)
+                if ((0 == ACTIVE_WEEKS_TIME) or (weeks_difference <= ACTIVE_WEEKS_TIME)):
+                    is_active = True
+                if (0 == most_recent_weeks_ago):
+                    most_recent_weeks_ago = weeks_difference
+                else:
+                    if weeks_difference < most_recent_weeks_ago:
+                        most_recent_weeks_ago = weeks_difference
+            
+            if (is_active):
+                active_list[location] = most_recent_weeks_ago
+                print (location + f" - sampled {most_recent_weeks_ago:.1f} weeks ago")
+                plot_river_data(location, data, global_limits)
+            else:
+                print (location + f" - INACTIVE ({most_recent_weeks_ago:.1f} weeks ago)")
 
     # Create a kml file to reference the above from
     print('Generating Google Earth .kml file')
@@ -288,26 +311,27 @@ def main():
         file.write('  <Document>\n')
         file.write('    <name>River sampling results</name>\n')
         for location, data in sampling_data.items():
-            for sample in data:
-                latitude = sample[4]
-                longitude = sample[5]
+            if location in active_list:
+                for sample in data:
+                    latitude = sample[4]
+                    longitude = sample[5]
+                    if latitude != None and longitude != None:
+                        break
+                num_graphs += 1
+                filename = location.replace('/','_')
                 if latitude != None and longitude != None:
-                    break
-            num_graphs += 1
-            filename = location.replace('/','_')
-            if latitude != None and longitude != None:
-                file.write('        <Placemark>\n')
-                file.write('          <name></name>\n')
-                file.write('          <description><![CDATA[\n')
-                file.write('            <img src="' + filename + '.png" alt="' + filename + '" width="594" height="446">\n')
-                file.write('          ]]></description>\n')
-                file.write('          <Point>\n')
-                file.write('            <coordinates>' + str(longitude) + ',' + str(latitude) + ',0</coordinates>\n')
-                file.write('          </Point>\n')
-                file.write('        </Placemark>\n')
-                num_added_to_kml += 1
-            else:
-                print('No location for '+location);
+                    file.write('        <Placemark>\n')
+                    file.write('          <name></name>\n')
+                    file.write('          <description><![CDATA[\n')
+                    file.write('            <img src="' + filename + '.png" alt="' + filename + '" width="594" height="446">\n')
+                    file.write('          ]]></description>\n')
+                    file.write('          <Point>\n')
+                    file.write('            <coordinates>' + str(longitude) + ',' + str(latitude) + ',0</coordinates>\n')
+                    file.write('          </Point>\n')
+                    file.write('        </Placemark>\n')
+                    num_added_to_kml += 1
+                else:
+                    print('No location for '+location);
         file.write('  </Document>\n')
         file.write('</kml>\n')
     print('Created ' + str(num_graphs) + ' graphs and linked ' + str(num_added_to_kml) + ' into kml file')
