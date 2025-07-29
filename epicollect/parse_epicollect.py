@@ -24,6 +24,16 @@ TEST = 0
 # If non-zero, disregard any data that doesn't have anything in this many weeks
 ACTIVE_WEEKS_TIME = 0
 
+# If non-zero, colour markers blue (i.e. leave natural) to show old
+SHOW_AGED_WEEKS_TIME = 5
+
+# Otherwise use these links depending whether one or both over threshold
+RED_MARKER = "<Style><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon></IconStyle></Style>"
+YELLOW_MARKER = "<Style><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href></Icon></IconStyle></Style>"
+GREEN_MARKER = "<Style><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-circle.png</href></Icon></IconStyle></Style>"
+BLUE_MARKER = "<Style><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href></Icon></IconStyle></Style>"
+
+
 cfg = None
 
 # INTERNAL DATE
@@ -271,6 +281,7 @@ def main():
     read_river_data(cfg.INPUT_CSV_FILENAME)
     global_limits = calculate_global_limits(sampling_data)
     active_list = defaultdict(list)
+    bad_quality_list = defaultdict(list)
 
     # Create the graphs of all sampling locations
     print('Creating graphs')
@@ -282,12 +293,28 @@ def main():
             # Check if active
             is_active = False
             most_recent_weeks_ago = 0
+            most_recent_sample_seconds_ago = 0
+            bad_quality_list[location] = -1
             for sample_entry in data:
                 timestamp = datetime.strptime(sample_entry.date, "%d/%m/%Y").replace(tzinfo=timezone.utc)
                 now = datetime.now(timezone.utc)
-                weeks_difference = (now - timestamp).total_seconds() / (7 * 24 * 60 * 60)
+                time_ago_seconds = (now - timestamp).total_seconds()
+                weeks_difference = time_ago_seconds / (7 * 24 * 60 * 60)
                 if ((0 == ACTIVE_WEEKS_TIME) or (weeks_difference <= ACTIVE_WEEKS_TIME)):
                     is_active = True
+                    if (0 == SHOW_AGED_WEEKS_TIME) or (weeks_difference <= SHOW_AGED_WEEKS_TIME):
+                        if (0 == most_recent_sample_seconds_ago) or (time_ago_seconds < most_recent_sample_seconds_ago):
+                            most_recent_sample_seconds_ago = time_ago_seconds
+                            bad_quality = 0
+                            if sample_entry.reading_conductivity >= cfg.THRESHOLD_CONDUCTIVITY:
+                                bad_quality += 1
+                            if sample_entry.reading_phosphates >= cfg.THRESHOLD_PHOSPHATES:
+                                bad_quality += 1
+                            if sample_entry.reading_nitrates >= cfg.THRESHOLD_NITRATES:
+                                bad_quality += 1
+                            if sample_entry.reading_ammonia >= cfg.THRESHOLD_AMMONIA:
+                                bad_quality += 1
+                            bad_quality_list[location] = bad_quality
                 if (0 == most_recent_weeks_ago):
                     most_recent_weeks_ago = weeks_difference
                 else:
@@ -320,7 +347,16 @@ def main():
                 num_graphs += 1
                 filename = location.replace('/','_')
                 if latitude != None and longitude != None:
+                    bad_quality = bad_quality_list[location]
                     file.write('        <Placemark>\n')
+                    if (0 == bad_quality):
+                        file.write(GREEN_MARKER)
+                    if (1 == bad_quality):
+                        file.write(YELLOW_MARKER)
+                    elif (bad_quality >= 2):
+                        file.write(RED_MARKER)
+                    else:
+                        file.write(BLUE_MARKER)
                     file.write('          <name></name>\n')
                     file.write('          <description><![CDATA[\n')
                     file.write('            <img src="' + filename + '.png" alt="' + filename + '" width="594" height="446">\n')
