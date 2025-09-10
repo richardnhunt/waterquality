@@ -92,6 +92,7 @@ SAMPLING_LOCATIONS = [
     ("Warwickshire Avon", 250, "Cropthorne, below pump house", 52.103992, -2.020204),
     ("Warwickshire Avon", 255, "Cropthorne strawberry farm", 52.105278, -2.029053),
     ("Warwickshire Avon", 260, "Lower Moor, below STW", 52.124358, -2.048519),
+    ("Warwickshire Avon", 261, "Wyre Piddle Anchor", 52.125235, -2.051679),
     ("Warwickshire Avon", 265, "Wyre Piddle", 52.12369, -2.05767),
     ("Warwickshire Avon", 270, "Pershore, Leisure Centre", 52.112278, -2.071453),
     ("Warwickshire Avon", 205, "Pershore, Bridges", 52.10525, -2.07059),
