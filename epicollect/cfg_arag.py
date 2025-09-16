@@ -60,7 +60,8 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge"),
              ("Rugby, Steam Turbine", "Rugby; Steam Turbine", "Rugby (Steam Turbine)"),
              ("Barford Below","Barford B"),
              ("Barford Above","Barford A"),
-             ("100 Bidford Bridge", "Bidford 100")
+             ("100 Bidford Bridge", "Bidford 100"),
+             ("Priory Water","Priory water")
            ]
 
 # Locations which have a number
