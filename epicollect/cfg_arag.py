@@ -31,7 +31,7 @@ COL_ALGAL_BLOOMS = 24
 COL_POLLUTION = 25
 
 # River names we are monitoring, case insensitive, we use the first one
-RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshire river avon", "warks avon", "River Avon Worcs", "Warwickshire  Avon"),
+RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshire river avon", "warks avon", "River Avon Worcs", "Warwickshire  Avon","Avon"),
                 ("Warwickshire Arrow", "Arrow", "Warks Arrow"),
                 ("Alne", "River Alne"),
                 ("Isbourne","Isbourne"),
@@ -50,7 +50,7 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge"),
              ("100 Wootten Warwen", "Pennyford Lane Bridge", "Pennyford Bridge lane", "Pennyford Lane (BAA WATER)", "Pennyford bridge"),
              ("Lido Stratford upon Avon", "Lido"),
              ("120 Spernal Lane", "Spernall Lane Bridge", "Spernal Lane Bridge", "spernall", "spernal lane"),
-             ("Cleeve Prior", "103 Cleeve Prior"),
+             ("103 Cleeve Prior", "Cleeve Prior", "Cleeve Prior 103"),
              ("240 Cropthorne, Holland House", "Holland House", "Holland House site 240"),
              ("25 Hinton, Bridge","25 Hinton, bridge"),
              ("30 Hampton, Bridge","30 Hampton, bridge"),
@@ -59,7 +59,8 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge"),
              ("280 Pershore, Bridges", "Pershore bridges"),
              ("Rugby, Steam Turbine", "Rugby; Steam Turbine", "Rugby (Steam Turbine)"),
              ("Barford Below","Barford B"),
-             ("Barford Above","Barford A")
+             ("Barford Above","Barford A"),
+             ("100 Bidford Bridge", "Bidford 100")
            ]
 
 # Locations which have a number
@@ -70,6 +71,7 @@ SAMPLING_LOCATIONS = [
     ("Isbourne", 30, "Hampton, Bridge", 52.085601, -1.956927),
     ("Warwickshire Avon", 50, "B4510 bridge", 52.104597, -1.916057),
     ("Warwickshire Avon", 100, "Bidford Bridge", 52.163627, -1.856484),
+    ("Warwickshire Avon", 103, "Cleeve Prior", 52.147696, -1.884128),
     ("Badsey Brook", 108, "B4510 Bridge", 52.091779, -1.907077),
     ("Elmley Brook", 245, "Cropthorne Main Street, Bridge", 52.100479, -2.007295),
     ("Warwickshire Avon", 115, "Twyford ANT landing", 52.117573, -1.930736),
