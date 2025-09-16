@@ -44,7 +44,7 @@ RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshir
 SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge"),
              ("220 Fladbury, Jubilee Bridge", "Jubilee Bridge Fladbury"),
              ("220 Fladbury, Jubilee Bridge", "Jubilee Bridge"),
-             ("270 Pershore, Leisure Centre", "Leisure Centre Pershore", "Pershore Leisure Centre", "Pershore les cent 270", "Pershore Leisure Centre 270"),
+             ("270 Pershore, Leisure Centre", "Leisure Centre Pershore", "Pershore Leisure Centre", "Pershore les cent 270", "Pershore Leisure Centre 270","Pershore LC 270","L centre Pershore 270","Pershore"),
              ("230 Charlton, Merry Brook", "230merry brook"),
              ("120 Offenham, Dead Mens Ait", "120a offenham Dead Mens Ait (opp)"),
              ("100 Wootten Warwen", "Pennyford Lane Bridge", "Pennyford Bridge lane", "Pennyford Lane (BAA WATER)", "Pennyford bridge"),
