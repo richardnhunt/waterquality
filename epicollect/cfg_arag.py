@@ -31,7 +31,7 @@ COL_ALGAL_BLOOMS = 24
 COL_POLLUTION = 25
 
 # River names we are monitoring, case insensitive, we use the first one
-RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshire river avon", "warks avon", "River Avon Worcs", "Warwickshire  Avon","Avon"),
+RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshire river avon", "warks avon", "River Avon Worcs", "Warwickshire  Avon","Avon","Worcestershire Avon"),
                 ("Warwickshire Arrow", "Arrow", "Warks Arrow"),
                 ("Alne", "River Alne"),
                 ("Isbourne","Isbourne"),
