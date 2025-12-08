@@ -228,7 +228,10 @@ def read_river_data(csv_file):
                 reading_conductivity = float(row[cfg.COL_CONDUCTIVITY]) if row[cfg.COL_CONDUCTIVITY] else 0
                 reading_temperature = float(row[cfg.COL_TEMPERATURE]) if row[cfg.COL_TEMPERATURE] else 0
                 reading_phosphates = float(row[cfg.COL_PHOSPHATES]) if row[cfg.COL_PHOSPHATES] else 0
-                reading_nitrates = float(row[cfg.COL_NITRATES]) if row[cfg.COL_NITRATES] else 0
+                try:
+                    reading_nitrates = float(row[cfg.COL_NITRATES]) if row[cfg.COL_NITRATES] else 0
+                except:
+                    reading_nitrates = 0
                 if cfg.COL_AMMONIA == None:
                     reading_ammonia = 0
                 else:
