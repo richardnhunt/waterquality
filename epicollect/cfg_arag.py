@@ -16,19 +16,19 @@ COL_EASTING = 12
 COL_UTMZONE = 13
 COL_DESCRIPTION = None
 COL_TIME = 14
-COL_CSO = None
-COL_CONDUCTIVITY = 19
-COL_TEMPERATURE = 20
-COL_NITRATES = 22
-COL_PHOSPHATES = 21
 COL_RIVER_HEIGHT = 15
-COL_NOTES = 26
 COL_RIVER_FLOW = 16
 COL_WEATHER = 17
 COL_RECENT_RAIN = 18
-COL_AMMONIA = 23
-COL_ALGAL_BLOOMS = 24
-COL_POLLUTION = 25
+COL_CSO = None
+COL_CONDUCTIVITY = 19
+COL_TEMPERATURE = 20
+COL_PHOSPHATES = 21
+COL_NITRATES = 23
+COL_AMMONIA = 24
+COL_ALGAL_BLOOMS = 25
+COL_POLLUTION = 26
+COL_NOTES = 29
 
 # River names we are monitoring, case insensitive, we use the first one
 RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshire river avon", "warks avon", "River Avon Worcs", "Warwickshire  Avon","Avon","Worcestershire Avon"),
@@ -36,7 +36,8 @@ RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshir
                 ("Alne", "River Alne"),
                 ("Isbourne","Isbourne"),
                 ("Badsey Brook","Badsey Brook"),
-                ("Elmley Brook","Elmley Brook","River Avon tributary brook")
+                ("Elmley Brook","Elmley Brook","River Avon tributary brook"),
+                ("Mary Brook","Mary Brook")
               ]
 
 # We map some names for consitency, include the location number if there is one (will be then stripped out)
@@ -61,7 +62,8 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge"),
              ("Barford Below","Barford B"),
              ("Barford Above","Barford A"),
              ("100 Bidford Bridge", "Bidford 100"),
-             ("Priory Water","Priory water")
+             ("Priory Water","Priory water"),
+             ("305 Mary Brook","305 Mary Brook","305","Comberton to Pershore Road Bridge","Great Comberton to Pershore")
            ]
 
 # Locations which have a number

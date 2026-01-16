@@ -11,6 +11,7 @@ import sys
 import csv
 from collections import defaultdict
 from collections import namedtuple
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import matplotlib.dates as mdates
@@ -279,6 +280,9 @@ def read_river_data(csv_file):
 
 def main():
 
+    # non-interactive backend
+    matplotlib.use("Agg")
+
     # Read in data and find largest range so can be common across all graphs
     print('Reading in river data')
     read_river_data(cfg.INPUT_CSV_FILENAME)
@@ -382,9 +386,26 @@ def main():
         with open(filename, 'w') as file:
             file.write('name,date,river,place,latitude,longitude,accuracy,location_description,time,river_height,river_flow,weather,recent_rain,reading_conductivity,reading_temperature,reading_phosphates,reading_nitrates,reading_ammonia,reading_algal_blooms,reading_pollution,reading_notes\n')
             for sample in data:
-                # exclude northing, easting, and utmzone present in sample tuple, add quotes to place and reading notes
-                filtered_entry = sample[:3] + (f'"{sample[3]}"',) + sample[4:7] + (f'"{sample[10]}"',) + sample[11:-1] + (f'"{sample[-1]}"',)
-                file.write(','.join(map(str, filtered_entry)) + '\n')
+                """
+                sample_entry = SampleEntry(
+                    name, date, river, place, latitude, longitude, accuracy, 
+                    northing, easting, utmzone, location_description, time, river_height, river_flow, 
+                    weather, recent_rain, reading_conductivity, reading_temperature, 
+                    reading_phosphates, reading_nitrates, reading_ammonia, reading_algal_blooms, 
+                    reading_pollution, reading_notes
+                )
+                """
+                # exclude northing, easting, and utmzone present in sample tuple, add quotes where needed
+                filtered_entry = ''
+                for i in range(len(sample)):
+                    if i != 7 and i != 8 and i != 9:
+                        if i > 0:
+                            filtered_entry += ','
+                        if i == 0 or i == 2 or i == 3 or i == 6 or i == 10 or i == 13 or i == 14 or i == 15 or i == 23:
+                            filtered_entry += f'"{sample[i]}"'
+                        else:
+                            filtered_entry += f'{sample[i]}'
+                file.write(filtered_entry + '\n')
 
 
 if __name__ == "__main__":
