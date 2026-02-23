@@ -89,6 +89,8 @@ SAMPLING_LOCATIONS = [
     ("Warwickshire Avon", 180, "Evesham, Worcester Rd ATS", 52.102447, -1.953149),
     ("Warwickshire Avon", 190, "Chadbury, Lock", 52.112619, -1.964094),
     ("Warwickshire Avon", 200, "Chadbury, Wood Norton", 52.120157, -1.983626),
+    ("Warwickshire Avon", 201, "Chadbury, Whitehouse farm right of pumphouse", 52.119645, -1.982726),
+    ("Warwickshire Avon", 202, "Chadbury, Whitehouse farm left of pumphouse", 52.120003, -1.983989),
     ("Warwickshire Avon", 210, "Fladbury, Paddle Club", 52.118181, -2.006461),
     ("Warwickshire Avon", 220, "Fladbury, Jubilee Bridge", 52.108816, -2.000528),
     ("Warwickshire Avon", 230, "Charlton, Merry Brook", 52.10853, -1.98801),
