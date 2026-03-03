@@ -40,7 +40,7 @@ cfg = None
 # INTERNAL DATE
 ###############
 
-InputColumns = namedtuple('Columns', 'NAME DATE TIME RIVER PLACE LAT LONG RIVER_HEIGHT CONDUCTIVITY TEMPERATURE PHOSPHATES NITRATES AMMONIA NOTES')
+InputColumns = namedtuple('Columns', 'NAME DATE TIME RIVER PLACE LAT LONG RIVER_HEIGHT CONDUCTIVITY TEMPERATURE PHOSPHATES_HI PHOSPHATES_LO NITRATES AMMONIA NOTES')
 
 SampleEntry = namedtuple('SampleEntry', 'name date time river place latitude longitude river_height reading_conductivity reading_temperature reading_phosphates reading_nitrates reading_ammonia reading_notes')
 
@@ -193,7 +193,6 @@ def plot_river_data(location, data, global_limits):
 # FILE HANDLING
 ###############
 def read_river_data(csv_file, columns):
-    print(columns)
     with open(csv_file, mode='r', newline='', encoding='utf-8') as file:
         reader = csv.reader(file)
         next(reader)
@@ -205,6 +204,7 @@ def read_river_data(csv_file, columns):
             else:
                 one_for_us = False
                 river = row[columns.RIVER].lower().strip()
+                river = river.split(' - ')[0]
                 river_cleaned_up = river.lower().strip()
                 for river_name_set in cfg.RIVER_NAMES:
                     for river_name_monitoring in river_name_set:
@@ -223,11 +223,13 @@ def read_river_data(csv_file, columns):
                 river_height = row[columns.RIVER_HEIGHT]
                 reading_conductivity = float(row[columns.CONDUCTIVITY]) if row[columns.CONDUCTIVITY] else 0
                 reading_temperature = float(row[columns.TEMPERATURE]) if row[columns.TEMPERATURE] else 0
-                reading_phosphates = float(row[columns.PHOSPHATES]) if row[columns.PHOSPHATES] else 0
+                reading_phosphates_hi = float(row[columns.PHOSPHATES_HI]) if row[columns.PHOSPHATES_HI] else 0
+                reading_phosphates_lo = float(row[columns.PHOSPHATES_LO]) if row[columns.PHOSPHATES_LO] else 0
+                reading_phosphates = reading_phosphates_hi if reading_phosphates_hi > 0 else reading_phosphates_lo
                 try:
                     reading_nitrates = float(row[columns.NITRATES]) if row[columns.NITRATES] else 0
                 except:
-                    reading_nitrates = 0
+                    reading_nitrates = 5 if row[columns.NITRATES] == '0, 5' else 0
                 if columns.AMMONIA == None:
                     reading_ammonia = 0
                 else:
@@ -267,6 +269,9 @@ def read_river_data(csv_file, columns):
                     reading_conductivity, reading_temperature, reading_phosphates, reading_nitrates, reading_ammonia,reading_notes
                 )
                 sampling_data[location].append(sample_entry)
+            else:
+                #print(f"*** not including {river_cleaned_up}")
+                pass
 
 def main():
 
@@ -276,10 +281,14 @@ def main():
     # Read in data and find largest range so can be common across all graphs
     print('Reading in river data')
 
-    read_river_data(cfg.INPUT_CSV_FILENAME, InputColumns(cfg.COL_NAME, cfg.COL_DATE, cfg.COL_TIME, cfg.COL_RIVER, cfg.COL_PLACE, cfg.COL_LAT, cfg.COL_LONG, cfg.COL_RIVER_HEIGHT, cfg.COL_CONDUCTIVITY, cfg.COL_TEMPERATURE, cfg.COL_PHOSPHATES, cfg.COL_NITRATES, cfg.COL_AMMONIA, cfg.COL_NOTES))
+    if hasattr(cfg, "INPUT_CSV_FILENAME"):
+        read_river_data(cfg.INPUT_CSV_FILENAME, InputColumns(cfg.COL_NAME, cfg.COL_DATE, cfg.COL_TIME, cfg.COL_RIVER, cfg.COL_PLACE, cfg.COL_LAT, cfg.COL_LONG, cfg.COL_RIVER_HEIGHT, cfg.COL_CONDUCTIVITY, cfg.COL_TEMPERATURE, cfg.COL_PHOSPHATES, cfg.COL_PHOSPHATES, cfg.COL_NITRATES, cfg.COL_AMMONIA, cfg.COL_NOTES))
     
     if hasattr(cfg, "SAFEORG_CSV_FILENAME"):
-        read_river_data(cfg.SAFEORG_CSV_FILENAME, InputColumns(cfg.COL_SAFEORG_NAME, cfg.COL_SAFEORG_DATE, cfg.COL_SAFEORG_TIME, cfg.COL_SAFEORG_RIVER, cfg.COL_SAFEORG_PLACE, cfg.COL_SAFEORG_LAT, cfg.COL_SAFEORG_LONG, cfg.COL_SAFEORG_RIVER_HEIGHT, cfg.COL_SAFEORG_CONDUCTIVITY, cfg.COL_SAFEORG_TEMPERATURE, cfg.COL_SAFEORG_PHOSPHATES, cfg.COL_SAFEORG_NITRATES, cfg.COL_SAFEORG_AMMONIA, cfg.COL_SAFEORG_NOTES))
+        read_river_data(cfg.SAFEORG_CSV_FILENAME, InputColumns(cfg.COL_SAFEORG_NAME, cfg.COL_SAFEORG_DATE, cfg.COL_SAFEORG_TIME, cfg.COL_SAFEORG_RIVER, cfg.COL_SAFEORG_PLACE, cfg.COL_SAFEORG_LAT, cfg.COL_SAFEORG_LONG, cfg.COL_SAFEORG_RIVER_HEIGHT, cfg.COL_SAFEORG_CONDUCTIVITY, cfg.COL_SAFEORG_TEMPERATURE, cfg.COL_SAFEORG_PHOSPHATES, cfg.COL_PHOSPHATES, cfg.COL_SAFEORG_NITRATES, cfg.COL_SAFEORG_AMMONIA, cfg.COL_SAFEORG_NOTES))
+
+    if hasattr(cfg, "SAFEAVON_CSV_FILENAME"):
+        read_river_data(cfg.SAFEAVON_CSV_FILENAME, InputColumns(cfg.COL_SAFE_NAME, cfg.COL_SAFE_DATE, cfg.COL_SAFE_TIME, cfg.COL_SAFE_RIVER, cfg.COL_SAFE_PLACE, cfg.COL_SAFE_LAT, cfg.COL_SAFE_LONG, cfg.COL_SAFE_RIVER_HEIGHT, cfg.COL_SAFE_CONDUCTIVITY, cfg.COL_SAFE_TEMPERATURE, cfg.COL_SAFE_PHOSPHATES_HI, cfg.COL_SAFE_PHOSPHATES_LO, cfg.COL_SAFE_NITRATES, cfg.COL_SAFE_AMMONIA, cfg.COL_SAFE_NOTES))
 
     global_limits = calculate_global_limits(sampling_data)
     active_list = defaultdict(list)

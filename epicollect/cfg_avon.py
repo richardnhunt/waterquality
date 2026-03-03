@@ -39,29 +39,50 @@ COL_SAFEORG_NOTES = 21
 
 # SafeAvon survey (new format)
 SAFEAVON_CSV_FILENAME = 'form-1__data-entry.csv'
-COL_SAFE_NAME = 16 # e.g. SA0106 or "I don't have an ID / can't remember it"
-COL_SAFE_DATE = 14 # e.g. 02/03/2026
-COL_SAFE_RIVER = 4 # up to ' - ', e.g. Avon River - Tewkesbury - Black Bear Pub 01/03/2026 SA0001
-COL_SAFE_PLACE = 5 # e.g. Avon River - Tewkesbury - Black Bear Pub
-COL_SAFE_LAT = 7
-COL_SAFE_LONG = 8
-COL_SAFE_TIME = 15 # e.g. 10:00
-COL_SAFE_RIVER_HEIGHT = 23
-COL_SAFE_CONDUCTIVITY = 17
-COL_SAFE_TEMPERATURE = 18
-COL_SAFE_PHOSPHATES_HI = 21 # use whichever column has number in it, prefer hi
-COL_SAFE_PHOSPHATES_LO = 22 # lo range phosphates
-COL_SAFE_NITRATES = 19 # e.g. "10" or "0, 5" or "I did not take a nitrate measurement."
-COL_SAFE_NOTES = 26
+COL_SAFE_NAME = 15 # e.g. SA0106 or "I don't have an ID / can't remember it"
+COL_SAFE_DATE = 13 # e.g. 02/03/2026
+COL_SAFE_RIVER = 3 # up to ' - ', e.g. Avon River - Tewkesbury - Black Bear Pub 01/03/2026 SA0001
+COL_SAFE_PLACE = 4 # e.g. Avon River - Tewkesbury - Black Bear Pub
+COL_SAFE_LAT = 6
+COL_SAFE_LONG = 7
+COL_SAFE_TIME = 14 # e.g. 10:00
+COL_SAFE_RIVER_HEIGHT = 22
+COL_SAFE_CONDUCTIVITY = 16
+COL_SAFE_TEMPERATURE = 17
+COL_SAFE_PHOSPHATES_HI = 20 # use whichever column has number in it, prefer hi
+COL_SAFE_PHOSPHATES_LO = 21 # lo range phosphates
+COL_SAFE_NITRATES = 18 # e.g. "10" or "0, 5" or "I did not take a nitrate measurement."
+COL_SAFE_AMMONIA = None
+COL_SAFE_NOTES = 25
 
 # River names we are monitoring, case insensitive, we use the first one
-RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshire river avon", "warks avon", "River Avon Worcs", "Warwickshire  Avon","Avon","Worcestershire Avon"),
-                ("Warwickshire Arrow", "Arrow", "Warks Arrow"),
+RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshire river avon", "warks avon", "River Avon Worcs", "Warwickshire  Avon","Avon","Worcestershire Avon","Avon river"),
+                ("Warwickshire Arrow", "Arrow", "Warks Arrow", "Arrow river"),
                 ("Alne", "River Alne"),
                 ("Isbourne","Isbourne"),
                 ("Badsey Brook","Badsey Brook"),
                 ("Elmley Brook","Elmley Brook","River Avon tributary brook"),
-                ("Mary Brook","Mary Brook")
+                ("Mary Brook","Mary Brook"),
+                ("Swilgate","Swilgate river"),
+                ("Sutton Brook","Sutton brook"),
+                ("Carrant Brook","Carrant brook"),
+                ("Stour","Stour river"),
+                ("Isbourne","Isbourne river") ,
+                ("Bell Brook","Bell brook"),
+                ("Sherbourne Brook","Sherbourne brook"),
+                ("Bow Brook", "Bow brook"),
+                ("Cam Brook", "Cam brook"),
+                ("Fosseway Brook", "Fosseway brook"),
+                ("Piddle Brook", "Piddle brook"),
+                ("Tributary (Alne River)", "tributary (alne river)"),
+                ("Stratford-upon-avon canal", "stratford-upon-avon canal"),
+                ("Stowe", "stowe river"),
+                ("Whitsun brook", "Whitsun brook"),
+                ("Howcombe spring", "Howcombe spring"),
+                ("Knee brook", "Knee brook"),
+                ("Itchen", "Itchen river"),
+                ("Nethercote brook", "Nethercote brook"),
+                ("Blockley Brook","Blockley Brook")
               ]
 
 # We map some names for consitency, include the location number if there is one (will be then stripped out)
@@ -69,6 +90,7 @@ RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshir
 SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge"),
              ("220 Fladbury, Jubilee Bridge", "Jubilee Bridge Fladbury"),
              ("220 Fladbury, Jubilee Bridge", "Jubilee Bridge"),
+             ("400 Eckington Bridge", "Eckington Bridge"),
              ("270 Pershore, Leisure Centre", "Leisure Centre Pershore", "Pershore Leisure Centre", "Pershore les cent 270", "Pershore Leisure Centre 270","Pershore LC 270","L centre Pershore 270","Pershore"),
              ("230 Charlton, Merry Brook", "230merry brook"),
              ("120 Offenham, Dead Mens Ait", "120a offenham Dead Mens Ait (opp)"),
@@ -239,6 +261,7 @@ SAMPLING_LOCATIONS = [
     ("Warwickshire Avon", 300, "Eckington, Bridge", 52.078815, -2.11487),
     ("Warwickshire Avon", 305, "Mary Brook", 52.096218, -2.049696),
     ("Warwickshire Avon", 310, "Defford, Arden Sailing Club", 52.079476, -2.127854),
+    ("Warwickshire Avon", 400, "Eckington Bridge", 52.0793, -2.1149),
     ("Warwickshire Arrow", 100, "Studley", 52.27419029342931, -1.883789898760419),
     ("Warwickshire Arrow", 120, "Spernal Lane", 52.26057296331432, -1.8762366844985907),
     ("Warwickshire Arrow", 200, "Salford Bridge", 52.16338142682303, -1.8803195030184976),
@@ -246,7 +269,8 @@ SAMPLING_LOCATIONS = [
     ("Alne", 130, "Little Alne", 52.250200998557055, -1.7935596094704758),
     ("Alne", 150, "Great Alne (Pelham Lane)", 52.23257559455438, -1.8317339626316056),
     ("Warwickshire Avon", 0, "Barford Below", 52.245253, -1.617944),
-    ("Warwickshire Avon", 0, "Barford Above", 52.256291, -1.597904)
+    ("Warwickshire Avon", 0, "Barford Above", 52.256291, -1.597904),
+    ("Warwickshire Avon", 0, "Lucy's Mill Bridge", 52.18399258673163, -1.7081747999999999)
 ]
 
 # Thresholds for graphs
@@ -266,8 +290,8 @@ MAX_NITRATES = 20
 ######################
 
 # Graph configuration
-FIG_SIZE_X_INCHES = 1
-FIG_SIZE_Y_INCHES = 0.75
+FIG_SIZE_X_INCHES = 2
+FIG_SIZE_Y_INCHES = 1.5
 
 # ...positions as fraction of figure size
 MARGIN_TOP_FRACTION = 0.995
@@ -279,4 +303,4 @@ YAXIS_LABEL_SPACING = 0.5
 TICK_LABEL_SPACING = 0.5
 SPACE_BETWEEN_SUBPLOTS = 0.1
 
-BAR_WIDTH = 10
+BAR_WIDTH = 2
