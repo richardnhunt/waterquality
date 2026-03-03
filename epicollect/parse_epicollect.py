@@ -40,7 +40,9 @@ cfg = None
 # INTERNAL DATE
 ###############
 
-SampleEntry = namedtuple('SampleEntry', 'name date river place latitude longitude accuracy northing easting utmzone location_description time river_height river_flow weather recent_rain reading_conductivity reading_temperature reading_phosphates reading_nitrates reading_ammonia reading_algal_blooms reading_pollution reading_notes')
+InputColumns = namedtuple('Columns', 'NAME DATE TIME RIVER PLACE LAT LONG RIVER_HEIGHT CONDUCTIVITY TEMPERATURE PHOSPHATES NITRATES AMMONIA NOTES')
+
+SampleEntry = namedtuple('SampleEntry', 'name date time river place latitude longitude river_height reading_conductivity reading_temperature reading_phosphates reading_nitrates reading_ammonia reading_notes')
 
 sampling_data = defaultdict(list)
 
@@ -190,18 +192,19 @@ def plot_river_data(location, data, global_limits):
 
 # FILE HANDLING
 ###############
-def read_river_data(csv_file):
+def read_river_data(csv_file, columns):
+    print(columns)
     with open(csv_file, mode='r', newline='', encoding='utf-8') as file:
         reader = csv.reader(file)
         next(reader)
         # Extract information from row on spreadsheet
         for row in reader:
-            if cfg.COL_RIVER == None:
+            if columns.RIVER == None:
                 one_for_us = True
                 river = None
             else:
                 one_for_us = False
-                river = row[cfg.COL_RIVER].lower().strip()
+                river = row[columns.RIVER].lower().strip()
                 river_cleaned_up = river.lower().strip()
                 for river_name_set in cfg.RIVER_NAMES:
                     for river_name_monitoring in river_name_set:
@@ -211,35 +214,25 @@ def read_river_data(csv_file):
                             break
 
             if one_for_us:
-                location_description = '' if cfg.COL_DESCRIPTION == None else row[cfg.COL_DESCRIPTION]
-                name = row[cfg.COL_NAME]
-                date = row[cfg.COL_DATE]
-                place = row[cfg.COL_PLACE]
-                latitude = float(row[cfg.COL_LAT]) if row[cfg.COL_LAT] else None
-                longitude = float(row[cfg.COL_LONG]) if row[cfg.COL_LONG] else None
-                accuracy = int(row[cfg.COL_ACCURACY]) if row[cfg.COL_ACCURACY] else None
-                northing = int(row[cfg.COL_NORTHING]) if row[cfg.COL_NORTHING] else None
-                easting = int(row[cfg.COL_EASTING]) if row[cfg.COL_EASTING] else None
-                utmzone = row[cfg.COL_UTMZONE]
-                time = row[cfg.COL_TIME]
-                river_height = row[cfg.COL_RIVER_HEIGHT]
-                river_flow = '' if cfg.COL_RIVER_FLOW == None else row[cfg.COL_RIVER_FLOW]
-                weather = '' if cfg.COL_WEATHER == None else row[cfg.COL_WEATHER]
-                recent_rain = '' if cfg.COL_RECENT_RAIN == None else row[cfg.COL_RECENT_RAIN]
-                reading_conductivity = float(row[cfg.COL_CONDUCTIVITY]) if row[cfg.COL_CONDUCTIVITY] else 0
-                reading_temperature = float(row[cfg.COL_TEMPERATURE]) if row[cfg.COL_TEMPERATURE] else 0
-                reading_phosphates = float(row[cfg.COL_PHOSPHATES]) if row[cfg.COL_PHOSPHATES] else 0
+                name = row[columns.NAME]
+                date = row[columns.DATE]
+                place = row[columns.PLACE]
+                latitude = float(row[columns.LAT]) if row[columns.LAT] else None
+                longitude = float(row[columns.LONG]) if row[columns.LONG] else None
+                time = row[columns.TIME]
+                river_height = row[columns.RIVER_HEIGHT]
+                reading_conductivity = float(row[columns.CONDUCTIVITY]) if row[columns.CONDUCTIVITY] else 0
+                reading_temperature = float(row[columns.TEMPERATURE]) if row[columns.TEMPERATURE] else 0
+                reading_phosphates = float(row[columns.PHOSPHATES]) if row[columns.PHOSPHATES] else 0
                 try:
-                    reading_nitrates = float(row[cfg.COL_NITRATES]) if row[cfg.COL_NITRATES] else 0
+                    reading_nitrates = float(row[columns.NITRATES]) if row[columns.NITRATES] else 0
                 except:
                     reading_nitrates = 0
-                if cfg.COL_AMMONIA == None:
+                if columns.AMMONIA == None:
                     reading_ammonia = 0
                 else:
-                    reading_ammonia = float(row[cfg.COL_AMMONIA]) if row[cfg.COL_AMMONIA] else 0
-                reading_algal_blooms = '' if cfg.COL_ALGAL_BLOOMS == None else row[cfg.COL_ALGAL_BLOOMS]
-                reading_pollution = '' if cfg.COL_POLLUTION == None else row[cfg.COL_POLLUTION]
-                reading_notes = row[cfg.COL_NOTES]
+                    reading_ammonia = float(row[columns.AMMONIA]) if row[columns.AMMONIA] else 0
+                reading_notes = row[columns.NOTES]
 
                 # Pre-process input placename to map any incorrect spellings
                 place = place.strip()
@@ -270,11 +263,8 @@ def read_river_data(csv_file):
                 # Store processed sample
                 location = place if river == None else river + ', ' + place
                 sample_entry = SampleEntry(
-                    name, date, river, place, latitude, longitude, accuracy, 
-                    northing, easting, utmzone, location_description, time, river_height, river_flow, 
-                    weather, recent_rain, reading_conductivity, reading_temperature, 
-                    reading_phosphates, reading_nitrates, reading_ammonia, reading_algal_blooms, 
-                    reading_pollution, reading_notes
+                    name, date, time, river, place, latitude, longitude, river_height, 
+                    reading_conductivity, reading_temperature, reading_phosphates, reading_nitrates, reading_ammonia,reading_notes
                 )
                 sampling_data[location].append(sample_entry)
 
@@ -285,7 +275,12 @@ def main():
 
     # Read in data and find largest range so can be common across all graphs
     print('Reading in river data')
-    read_river_data(cfg.INPUT_CSV_FILENAME)
+
+    read_river_data(cfg.INPUT_CSV_FILENAME, InputColumns(cfg.COL_NAME, cfg.COL_DATE, cfg.COL_TIME, cfg.COL_RIVER, cfg.COL_PLACE, cfg.COL_LAT, cfg.COL_LONG, cfg.COL_RIVER_HEIGHT, cfg.COL_CONDUCTIVITY, cfg.COL_TEMPERATURE, cfg.COL_PHOSPHATES, cfg.COL_NITRATES, cfg.COL_AMMONIA, cfg.COL_NOTES))
+    
+    if hasattr(cfg, "SAFEORG_CSV_FILENAME"):
+        read_river_data(cfg.SAFEORG_CSV_FILENAME, InputColumns(cfg.COL_SAFEORG_NAME, cfg.COL_SAFEORG_DATE, cfg.COL_SAFEORG_TIME, cfg.COL_SAFEORG_RIVER, cfg.COL_SAFEORG_PLACE, cfg.COL_SAFEORG_LAT, cfg.COL_SAFEORG_LONG, cfg.COL_SAFEORG_RIVER_HEIGHT, cfg.COL_SAFEORG_CONDUCTIVITY, cfg.COL_SAFEORG_TEMPERATURE, cfg.COL_SAFEORG_PHOSPHATES, cfg.COL_SAFEORG_NITRATES, cfg.COL_SAFEORG_AMMONIA, cfg.COL_SAFEORG_NOTES))
+
     global_limits = calculate_global_limits(sampling_data)
     active_list = defaultdict(list)
     bad_quality_list = defaultdict(list)
@@ -347,8 +342,8 @@ def main():
         for location, data in sampling_data.items():
             if location in active_list:
                 for sample in data:
-                    latitude = sample[4]
-                    longitude = sample[5]
+                    latitude = sample.latitude
+                    longitude = sample.longitude
                     if latitude != None and longitude != None:
                         break
                 num_graphs += 1
@@ -384,27 +379,16 @@ def main():
     for location, data in sampling_data.items():
         filename = cfg.OUTPUT_FOLDER + '/' + location.replace('/','_') + '.csv'
         with open(filename, 'w') as file:
-            file.write('name,date,river,place,latitude,longitude,accuracy,location_description,time,river_height,river_flow,weather,recent_rain,reading_conductivity,reading_temperature,reading_phosphates,reading_nitrates,reading_ammonia,reading_algal_blooms,reading_pollution,reading_notes\n')
+            file.write('name, date, time, river, place, latitude, longitude, river_height, reading_conductivity, reading_temperature, reading_phosphates, reading_nitrates, reading_ammonia,reading_notes\n')
             for sample in data:
-                """
-                sample_entry = SampleEntry(
-                    name, date, river, place, latitude, longitude, accuracy, 
-                    northing, easting, utmzone, location_description, time, river_height, river_flow, 
-                    weather, recent_rain, reading_conductivity, reading_temperature, 
-                    reading_phosphates, reading_nitrates, reading_ammonia, reading_algal_blooms, 
-                    reading_pollution, reading_notes
-                )
-                """
-                # exclude northing, easting, and utmzone present in sample tuple, add quotes where needed
                 filtered_entry = ''
                 for i in range(len(sample)):
-                    if i != 7 and i != 8 and i != 9:
-                        if i > 0:
-                            filtered_entry += ','
-                        if i == 0 or i == 2 or i == 3 or i == 6 or i == 10 or i == 13 or i == 14 or i == 15 or i == 23:
-                            filtered_entry += f'"{sample[i]}"'
-                        else:
-                            filtered_entry += f'{sample[i]}'
+                    if i > 0:
+                        filtered_entry += ','
+                    if i == 0 or i == 3 or i == 4 or i == 13:
+                        filtered_entry += f'"{sample[i]}"'
+                    else:
+                        filtered_entry += f'{sample[i]}'
                 file.write(filtered_entry + '\n')
 
 
