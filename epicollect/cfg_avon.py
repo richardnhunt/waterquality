@@ -180,12 +180,21 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge"),
              ("Welford Boat Station", "Welford Boat Station"),
              ("Weston on Avon", "Weston on Avon"),
              ("Whitsun Brook, Atch", "Whistun Brook Atch", "Whitsun Brook Atch Lench Road"),
-             ("Whitsun Brook, Church Lench Bridge", "Whitsun Brook Church Lench Bridge"),
+             ("Whitsun Brook, Church Lench Bridge", "Whitsun Brook Church Lench Bridge", "Whitson Brook, Atch"),
              ("Whitsun Brook, Bishampton","Whitsun Brook north of Bishampton"),
-             ("Whitsun Brook, Rous Church Lench", "Whitsun Brook Rous Church Lench"),
              ("Whitsun Brook, Rous Lench Bishampton", "Whitsun Brook, Rous Lench Bishampton","Whitsun Brook Rous Lench Bishampton"),
-             ("Whitsun Brook, Low road, Church Lench", "Whitsun Brook, Low Road, Church Lench","Whitsun Brook. Low road, Church Lench"),
-             ("WyrePiddleBrook","WyrePiddleBrook")
+             ("Whitsun Brook, Low road, Church Lench", "Whitsun Brook, Low Road, Church Lench","Whitsun Brook. Low road, Church Lench","Whitsun Brook, Rous Church Lench"),
+             ("WyrePiddleBrook","WyrePiddleBrook"),
+             ("Bubbenhall road","Bubbenhall road, Bubbenhall","Bubbenhall road","Bubbenhall","Bubenhall road"),
+             ("High Street Brailes","High Street Brailes","Brailes main road","Sutton Brook, High Street"),
+             ("Stour, Shipston Mill Bridge","Stour, Shipston Mill Bridge","Stour, Mill Bridge Shipston","Stour, Shipston Mill Bridge"),
+             ("Defford, Arden Sailing Club","Defford, Arden Sailing Club","Arden Sailing Club"),
+             ("Avon Smith's Meadow","Avon Smith's Meadow","Piddle Brook Bridge"),
+             ("Carrant Brook, Back","Carrant Brook, Back","Carrant Brook Beckford","Carrant back lane Beckford 28/06/2024 Geoff"),
+             ("STW outfall Ilmington","STW outfall Ilmington","ST Outflow","Site 3: Severn Trent Plant","Severn Trent Outflow"),
+             ("Cam, Chimping Campden Craves","Cam, Chimping Campden Craves","The craves"),
+             ("Cam, Chimping Campden Craves","Cam, Chimping Campden Craves","The craves"),
+
            ]
 
 # Locations which have a number
