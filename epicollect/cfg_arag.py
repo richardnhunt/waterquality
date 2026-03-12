@@ -42,6 +42,7 @@ RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshir
 
 # We map some names for consitency, include the location number if there is one (will be then stripped out)
 # Names get changed to the first one in the list
+# Note names are sometimes repeated to force case insensitive match
 SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge"),
              ("220 Fladbury, Jubilee Bridge", "Jubilee Bridge Fladbury"),
              ("220 Fladbury, Jubilee Bridge", "Jubilee Bridge"),
@@ -65,6 +66,9 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge"),
              ("Priory Water","Priory water"),
              ("305 Mary Brook","305 Mary Brook","305","Comberton to Pershore Road Bridge","Great Comberton to Pershore")
            ]
+
+# Locations to exclude, useful if duplicate river name elsewhere in the country!  IN LOWER CASE
+EXCLUDE_LOCATIONS = []
 
 # Locations which have a number
 # If we find a number in the place name in spreadsheet, then try to look up that number for the river in this list first
@@ -135,8 +139,11 @@ MAX_NITRATES = 20
 ######################
 
 # Graph configuration
-FIG_SIZE_X_INCHES = 1
-FIG_SIZE_Y_INCHES = 0.75
+FIG_SIZE_X_INCHES = 2
+FIG_SIZE_Y_INCHES = 1.5
+DPI = 600
+LABELFONTSIZE = 24
+TICKFONTSIZE = 16
 
 # ...positions as fraction of figure size
 MARGIN_TOP_FRACTION = 0.995

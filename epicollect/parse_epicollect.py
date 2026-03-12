@@ -18,6 +18,7 @@ import matplotlib.dates as mdates
 from datetime import datetime, timedelta, timezone
 import numpy as np
 import importlib
+import re
 
 # Set to 1 for one-off test
 TEST = 0
@@ -121,11 +122,11 @@ def plot_river_data(location, data, global_limits):
         nitrates_max = cfg.MAX_NITRATES
 
     # Create a figure and subplots (optimize for small size)
-    fig, axs = plt.subplots(2, 1, figsize=(cfg.FIG_SIZE_X_INCHES, cfg.FIG_SIZE_Y_INCHES), dpi=600, sharex=True)
+    fig, axs = plt.subplots(2, 1, figsize=(cfg.FIG_SIZE_X_INCHES, cfg.FIG_SIZE_Y_INCHES), dpi=cfg.DPI, sharex=True)
 
     # Set the font size in pixels (roughly equivalent to 16 pixels)
-    label_fontsize = 8 * (72.27 / fig.dpi)  # Convert 16 pixels to relative fontsize
-    tick_fontsize = 7 * (72.27 / fig.dpi)
+    label_fontsize = cfg.LABELFONTSIZE * (72.27 / fig.dpi)  # Convert 16 pixels to relative fontsize
+    tick_fontsize = cfg.TICKFONTSIZE * (72.27 / fig.dpi)
 
     # Define the bar plots for each reading and temperature
     def create_subplot(ax, y_values, y_label, min_y, max_y, threshold_y, colour_y, y2_values, y2_label, min_y2, max_y2, threshold_y2, colour_y2):
@@ -192,6 +193,15 @@ def plot_river_data(location, data, global_limits):
 
 # FILE HANDLING
 ###############
+def left_of_date(text):
+    # pattern for dates like 16/02/2024 or 1/2/2024
+    pattern = r'\b\d{1,2}/\d{1,2}/\d{4}\b'
+    
+    match = re.search(pattern, text)
+    if match:
+        return text[:match.start()].rstrip()
+    return text
+
 def read_river_data(csv_file, columns):
     with open(csv_file, mode='r', newline='', encoding='utf-8') as file:
         reader = csv.reader(file)
@@ -206,7 +216,7 @@ def read_river_data(csv_file, columns):
                 one_for_us = False
                 river = row[columns.RIVER].lower().strip()
                 river = river.split(' - ')[0]
-                river_cleaned_up = river.lower().strip()
+                river_cleaned_up = river.lower().strip().replace(':',';')
                 for river_name_set in cfg.RIVER_NAMES:
                     for river_name_monitoring in river_name_set:
                         if river_name_monitoring.lower().strip() == river_cleaned_up:
@@ -217,7 +227,7 @@ def read_river_data(csv_file, columns):
             if one_for_us:
                 name = row[columns.NAME]
                 date = row[columns.DATE]
-                place = row[columns.PLACE]
+                place = left_of_date(row[columns.PLACE].replace(':',';'))
                 # SafeAvon placenames also include river as well, so strip out
                 if place.lower().startswith(river_cleaned_up):
                     place = place[len(river_cleaned_up):]
@@ -310,43 +320,44 @@ def main():
         plot_river_data(location, data, global_limits)
     else:
         for location, data in sampling_data.items():
-            # Check if active
-            is_active = False
-            most_recent_weeks_ago = 0
-            most_recent_sample_seconds_ago = 0
-            bad_quality_list[location] = -1
-            for sample_entry in data:
-                timestamp = datetime.strptime(sample_entry.date, "%d/%m/%Y").replace(tzinfo=timezone.utc)
-                now = datetime.now(timezone.utc)
-                time_ago_seconds = (now - timestamp).total_seconds()
-                weeks_difference = time_ago_seconds / (7 * 24 * 60 * 60)
-                if ((0 == ACTIVE_WEEKS_TIME) or (weeks_difference <= ACTIVE_WEEKS_TIME)):
-                    is_active = True
-                    if (0 == SHOW_AGED_WEEKS_TIME) or (weeks_difference <= SHOW_AGED_WEEKS_TIME):
-                        if (0 == most_recent_sample_seconds_ago) or (time_ago_seconds < most_recent_sample_seconds_ago):
-                            most_recent_sample_seconds_ago = time_ago_seconds
-                            bad_quality = 0
-                            if sample_entry.reading_conductivity >= cfg.THRESHOLD_CONDUCTIVITY:
-                                bad_quality += 1
-                            if sample_entry.reading_phosphates >= cfg.THRESHOLD_PHOSPHATES:
-                                bad_quality += 1
-                            if sample_entry.reading_nitrates >= cfg.THRESHOLD_NITRATES:
-                                bad_quality += 1
-                            if sample_entry.reading_ammonia >= cfg.THRESHOLD_AMMONIA:
-                                bad_quality += 1
-                            bad_quality_list[location] = bad_quality
-                if (0 == most_recent_weeks_ago):
-                    most_recent_weeks_ago = weeks_difference
-                else:
-                    if weeks_difference < most_recent_weeks_ago:
+            if location.split(', ')[1].lower() not in cfg.EXCLUDE_LOCATIONS:
+                # Check if active
+                is_active = False
+                most_recent_weeks_ago = 0
+                most_recent_sample_seconds_ago = 0
+                bad_quality_list[location] = -1
+                for sample_entry in data:
+                    timestamp = datetime.strptime(sample_entry.date, "%d/%m/%Y").replace(tzinfo=timezone.utc)
+                    now = datetime.now(timezone.utc)
+                    time_ago_seconds = (now - timestamp).total_seconds()
+                    weeks_difference = time_ago_seconds / (7 * 24 * 60 * 60)
+                    if ((0 == ACTIVE_WEEKS_TIME) or (weeks_difference <= ACTIVE_WEEKS_TIME)):
+                        is_active = True
+                        if (0 == SHOW_AGED_WEEKS_TIME) or (weeks_difference <= SHOW_AGED_WEEKS_TIME):
+                            if (0 == most_recent_sample_seconds_ago) or (time_ago_seconds < most_recent_sample_seconds_ago):
+                                most_recent_sample_seconds_ago = time_ago_seconds
+                                bad_quality = 0
+                                if sample_entry.reading_conductivity >= cfg.THRESHOLD_CONDUCTIVITY:
+                                    bad_quality += 1
+                                if sample_entry.reading_phosphates >= cfg.THRESHOLD_PHOSPHATES:
+                                    bad_quality += 1
+                                if sample_entry.reading_nitrates >= cfg.THRESHOLD_NITRATES:
+                                    bad_quality += 1
+                                if sample_entry.reading_ammonia >= cfg.THRESHOLD_AMMONIA:
+                                    bad_quality += 1
+                                bad_quality_list[location] = bad_quality
+                    if (0 == most_recent_weeks_ago):
                         most_recent_weeks_ago = weeks_difference
-            
-            if (is_active):
-                active_list[location] = most_recent_weeks_ago
-                print (location + f" - sampled {most_recent_weeks_ago:.1f} weeks ago")
-                plot_river_data(location, data, global_limits)
-            else:
-                print (location + f" - INACTIVE ({most_recent_weeks_ago:.1f} weeks ago)")
+                    else:
+                        if weeks_difference < most_recent_weeks_ago:
+                            most_recent_weeks_ago = weeks_difference
+                
+                if (is_active):
+                    active_list[location] = most_recent_weeks_ago
+                    print (location + f" - sampled {most_recent_weeks_ago:.1f} weeks ago")
+                    plot_river_data(location, data, global_limits)
+                else:
+                    print (location + f" - INACTIVE ({most_recent_weeks_ago:.1f} weeks ago)")
 
     # Create a kml file to reference the above from
     print('Generating Google Earth .kml file')
@@ -358,36 +369,37 @@ def main():
         file.write('  <Document>\n')
         file.write('    <name>River sampling results</name>\n')
         for location, data in sampling_data.items():
-            if location in active_list:
-                for sample in data:
-                    latitude = sample.latitude
-                    longitude = sample.longitude
+            if location.split(', ')[1].lower() not in cfg.EXCLUDE_LOCATIONS:
+                if location in active_list:
+                    for sample in data:
+                        latitude = sample.latitude
+                        longitude = sample.longitude
+                        if latitude != None and longitude != None:
+                            break
+                    num_graphs += 1
+                    filename = location.replace('/','_')
                     if latitude != None and longitude != None:
-                        break
-                num_graphs += 1
-                filename = location.replace('/','_')
-                if latitude != None and longitude != None:
-                    bad_quality = bad_quality_list[location]
-                    file.write('        <Placemark>\n')
-                    if (0 == bad_quality):
-                        file.write(GREEN_MARKER)
-                    if (1 == bad_quality):
-                        file.write(YELLOW_MARKER)
-                    elif (bad_quality >= 2):
-                        file.write(RED_MARKER)
+                        bad_quality = bad_quality_list[location]
+                        file.write('        <Placemark>\n')
+                        if (0 == bad_quality):
+                            file.write(GREEN_MARKER)
+                        if (1 == bad_quality):
+                            file.write(YELLOW_MARKER)
+                        elif (bad_quality >= 2):
+                            file.write(RED_MARKER)
+                        else:
+                            file.write(BLUE_MARKER)
+                        file.write('          <name></name>\n')
+                        file.write('          <description><![CDATA[\n')
+                        file.write('            <img src="' + filename + '.png" alt="' + filename + '" width="594" height="446">\n')
+                        file.write('          ]]></description>\n')
+                        file.write('          <Point>\n')
+                        file.write('            <coordinates>' + str(longitude) + ',' + str(latitude) + ',0</coordinates>\n')
+                        file.write('          </Point>\n')
+                        file.write('        </Placemark>\n')
+                        num_added_to_kml += 1
                     else:
-                        file.write(BLUE_MARKER)
-                    file.write('          <name></name>\n')
-                    file.write('          <description><![CDATA[\n')
-                    file.write('            <img src="' + filename + '.png" alt="' + filename + '" width="594" height="446">\n')
-                    file.write('          ]]></description>\n')
-                    file.write('          <Point>\n')
-                    file.write('            <coordinates>' + str(longitude) + ',' + str(latitude) + ',0</coordinates>\n')
-                    file.write('          </Point>\n')
-                    file.write('        </Placemark>\n')
-                    num_added_to_kml += 1
-                else:
-                    print('No location for '+location);
+                        print('No location for '+location);
         file.write('  </Document>\n')
         file.write('</kml>\n')
     print('Created ' + str(num_graphs) + ' graphs and linked ' + str(num_added_to_kml) + ' into kml file')
@@ -395,19 +407,20 @@ def main():
     # Output cleaned csv
     print('Generating .csv files')
     for location, data in sampling_data.items():
-        filename = cfg.OUTPUT_FOLDER + '/' + location.replace('/','_') + '.csv'
-        with open(filename, 'w') as file:
-            file.write('name, date, time, river, place, latitude, longitude, river_height, reading_conductivity, reading_temperature, reading_phosphates, reading_nitrates, reading_ammonia,reading_notes\n')
-            for sample in data:
-                filtered_entry = ''
-                for i in range(len(sample)):
-                    if i > 0:
-                        filtered_entry += ','
-                    if i == 0 or i == 3 or i == 4 or i == 13:
-                        filtered_entry += f'"{sample[i]}"'
-                    else:
-                        filtered_entry += f'{sample[i]}'
-                file.write(filtered_entry + '\n')
+        if location.split(', ')[1].lower() not in cfg.EXCLUDE_LOCATIONS:
+            filename = cfg.OUTPUT_FOLDER + '/' + location.replace('/','_') + '.csv'
+            with open(filename, 'w') as file:
+                file.write('name, date, time, river, place, latitude, longitude, river_height, reading_conductivity, reading_temperature, reading_phosphates, reading_nitrates, reading_ammonia,reading_notes\n')
+                for sample in data:
+                    filtered_entry = ''
+                    for i in range(len(sample)):
+                        if i > 0:
+                            filtered_entry += ','
+                        if i == 0 or i == 3 or i == 4 or i == 13:
+                            filtered_entry += f'"{sample[i]}"'
+                        else:
+                            filtered_entry += f'{sample[i]}'
+                    file.write(filtered_entry + '\n')
 
 
 if __name__ == "__main__":

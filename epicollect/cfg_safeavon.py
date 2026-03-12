@@ -30,8 +30,9 @@ COL_AMMONIA = None
 COL_ALGAL_BLOOMS = None
 COL_POLLUTION = None
 
-# We map titles which start with the terms on the right of each entry to the list to
-# the name on the left (case insensitive)
+# We map some names for consitency, include the location number if there is one (will be then stripped out)
+# Names get changed to the first one in the list
+# Note names are sometimes repeated to force case insensitive match
 SYNONYMS = [
 ("Abbey Mill", "Abbey Mill"),
 ("After sewage works", "After sewage works"),
@@ -133,6 +134,9 @@ SYNONYMS = [
 ("WyrePiddleBrook","WyrePiddleBrook"),
 ]
 
+# Locations to exclude, useful if duplicate river name elsewhere in the country!  IN LOWER CASE
+EXCLUDE_LOCATIONS = []
+
 # Locations which have a number
 # If we find a number in the place name in spreadsheet, then try to look up that number for the river in this list first
 # Place name in table below must be the same as SYNONYMS above but without the number
@@ -156,8 +160,11 @@ MAX_NITRATES = 10
 ######################
 
 # Graph configuration
-FIG_SIZE_X_INCHES = 1
-FIG_SIZE_Y_INCHES = 0.75
+FIG_SIZE_X_INCHES = 2
+FIG_SIZE_Y_INCHES = 1.5
+DPI = 600
+LABELFONTSIZE = 24
+TICKFONTSIZE = 16
 
 # ...positions as fraction of figure size
 MARGIN_TOP_FRACTION = 0.995
