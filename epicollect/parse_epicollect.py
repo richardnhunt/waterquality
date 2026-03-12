@@ -203,6 +203,7 @@ def left_of_date(text):
     return text
 
 def read_river_data(csv_file, columns):
+    badlist=[]
     with open(csv_file, mode='r', newline='', encoding='utf-8') as file:
         reader = csv.reader(file)
         next(reader)
@@ -277,7 +278,23 @@ def read_river_data(csv_file, columns):
                             latitude = entry[3]
                             longitude = entry[4]
                             break
-
+                # Attempt to find river if missing
+                if river == None:
+                    comma_split = place.split(',')
+                    if (len(comma_split)>0):
+                        for entry in cfg.RIVER_NAMES:
+                            for subentry in entry:
+                                if comma_split[0].lower() == subentry.lower():
+                                    river = entry[0]
+                                    break
+                if river == None:
+                    for entry in cfg.MISSING_RIVERS:
+                        if place.lower() == entry[0].lower():
+                            river = entry[1]
+                            break
+                if river == None:
+                    if place.lower() not in badlist:
+                        badlist.append(place.lower())
                 # Store processed sample
                 location = place if river == None else river + ', ' + place
                 sample_entry = SampleEntry(
@@ -288,6 +305,16 @@ def read_river_data(csv_file, columns):
             else:
                 #print(f"*** not including {river_cleaned_up}")
                 pass
+    if len(badlist)>0:
+        print(f"Places missing river - {badlist}")
+
+def is_location_excluded(location):
+    result = False
+    try:
+        result = location.split(', ')[1].lower() in cfg.EXCLUDE_LOCATIONS
+    except:
+        result = location.lower() in cfg.EXCLUDE_LOCATIONS
+    return result
 
 def main():
 
@@ -320,7 +347,7 @@ def main():
         plot_river_data(location, data, global_limits)
     else:
         for location, data in sampling_data.items():
-            if location.split(', ')[1].lower() not in cfg.EXCLUDE_LOCATIONS:
+            if not is_location_excluded(location):
                 # Check if active
                 is_active = False
                 most_recent_weeks_ago = 0
@@ -369,7 +396,7 @@ def main():
         file.write('  <Document>\n')
         file.write('    <name>River sampling results</name>\n')
         for location, data in sampling_data.items():
-            if location.split(', ')[1].lower() not in cfg.EXCLUDE_LOCATIONS:
+            if not is_location_excluded(location):
                 if location in active_list:
                     for sample in data:
                         latitude = sample.latitude
@@ -407,7 +434,7 @@ def main():
     # Output cleaned csv
     print('Generating .csv files')
     for location, data in sampling_data.items():
-        if location.split(', ')[1].lower() not in cfg.EXCLUDE_LOCATIONS:
+        if not is_location_excluded(location):
             filename = cfg.OUTPUT_FOLDER + '/' + location.replace('/','_') + '.csv'
             with open(filename, 'w') as file:
                 file.write('name, date, time, river, place, latitude, longitude, river_height, reading_conductivity, reading_temperature, reading_phosphates, reading_nitrates, reading_ammonia,reading_notes\n')

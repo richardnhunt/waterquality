@@ -42,6 +42,11 @@ SYNONYMS = [
 ("Black Bridge","Black bridge"),
            ]
 
+# Some locations are missing rivers, which means they don't get merged
+# We get away with it in some instances where never have a river assigned, but some have a mix
+MISSING_RIVERS = [
+]
+
 # Locations to exclude, useful if duplicate river name elsewhere in the country!  IN LOWER CASE
 EXCLUDE_LOCATIONS = []
 
