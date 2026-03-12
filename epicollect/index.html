@@ -33,19 +33,13 @@
             font-size: 1.1em;
             color: #555;
             margin-bottom: 20px;
-            text-align: center;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
+            text-align: left;
         }
 
         ul li {
             background: #e7f5f0;
             padding: 10px;
             margin-bottom: 10px;
-            border-left: 4px solid #2c5e4e;
             font-size: 1.1em;
             color: #333;
         }
@@ -76,12 +70,21 @@
 <body>
     <div class="container">
         <h1>River Sampling</h1>
+        Volunteers regulary sample the Avon and its tributaries for the following:
+        <ul>
+            <li>Water quality checks (phosphates, nitrates, ammonia, conductivity)
+            <li>Weekly water bacteria checks (e-coli, intestinal enterocci, culiforms)
+        </ul>
+        <p>For some known outfall locations into the Avon, please refer to <a href="https://www.google.co.uk/maps/@52.1412473,-2.1981324,10z/data=!4m2!6m1!1s1gG-L06hy_oDEqmKIlBoWtjHh6odRkLY?entry=ttu&g_ep=EgoyMDI0MTAwMi4xIKXMDSoASAFQAw%3D%3D" target="_blank">this map here</a>.  It will open in a new tab and you can click the different source types down the left (or clicking at the bottom if looking using a mobile phone).</p>
+    </div>
 
+    <div class="container">
+        <h1>Water quality checks</h1>
         <p>The map below shows sampling results taken by volunteers of the <a href="https://avonvaleriver.org/">Avonvale River Action Group</a>, <a href="https://safeavon.org.uk/">Safe Avon</a>, <a href="https://anglingtrust.net/get-involved/anglers-against-pollution/wqmn/">Angling Trust</a>, and other concerned groups in the area. The graphs below are then generated from an export of that data with an expectation to update them here monthly.</p>
 
         <p>This data should not be used to determine river safety but instead viewed as an indicator of general trends in river health.</p>
 
-        <p>Three key pollutants are displayed when you click on a location, along with a "good" threshold for comparison:</p>
+        <p>Three key pollutants are displayed when you click on a location, along with a "good" threshold for comparison.  These dashed horizontal line thresholds are derived from a variety of sources and are for indicative purposes only.</p></p>
         
         <ul>
             <li><b>Conductivity</b> measurements reflect the amount of dissolved salts and minerals in the river, with higher levels often indicating pollution from urban runoff, industrial discharge, or agricultural activities, which can impact water quality and aquatic life.
@@ -90,14 +93,9 @@
             <li><b>Ammonia</b> often indicates pollution from agricultural runoff, sewage, or industrial waste, signaling poor water quality and potential harm to aquatic life. Elevated ammonia levels can pose health risks to humans.
         </ul>
         
-        <p>For purposes of graph visibility, conductivity readings are clipped at 3000</p>
+        <p>For reasons of graph visibility, conductivity readings are clipped at 3000</p>
         
         <div id="map"></div>
-    </div>
-    <div>
-        <h1>Discharge points</h1>
-        <p>For some known outfall locations into the Avon, please refer to <a href="https://www.google.co.uk/maps/@52.1412473,-2.1981324,10z/data=!4m2!6m1!1s1gG-L06hy_oDEqmKIlBoWtjHh6odRkLY?entry=ttu&g_ep=EgoyMDI0MTAwMi4xIKXMDSoASAFQAw%3D%3D" target="_blank">this map here</a>.  It will open in a new tab and you can click the different source types down the left.</p>
-        
     </div>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARigvk6jK0d5Qg-MiGbGtRhInADRvtT6g"></script>
@@ -116,6 +114,13 @@
             });
         }
     </script>
+
+    <div class="container">
+        <h1>Weekly bacteria watch</h1>
+        <p>For 2025/2026 Avonvale River Action Group secured funding from <a href="https://www.sas.org.uk/">Surfers against Sewage</a> to allow us to monitor bacteria levels in the river as well.  You can find these <a href="https://avonbacteria.bernielabs.co.uk/">e-coli and enterocci results here</a>.</p>
+    </div>
+
+
 </body>
 <body onload="initMap()">
     <div id="map"></div>
