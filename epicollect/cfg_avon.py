@@ -56,7 +56,13 @@ COL_SAFE_NITRATES = 18 # e.g. "10" or "0, 5" or "I did not take a nitrate measur
 COL_SAFE_AMMONIA = None
 COL_SAFE_NOTES = 25
 
-# River names we are monitoring, case insensitive, we use the first one
+# STEP 1
+#
+# River names we are monitoring, checked against the "RIVER" column along with their synonyums.  We use
+# the first entry name.  If no river found then included in output regardless.
+#
+# If river column empty then we attempt to parse from the PLACE column which may include it before ' - ' or ','
+# and if find it then separate it out from PLACE and use it for RIVER.  This then avoids this type of duplicate entry.
 RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshire river avon", "warks avon", "River Avon Worcs", "Warwickshire  Avon","Avon","Worcestershire Avon","Avon river"),
                 ("Warwickshire Arrow", "Arrow", "Warks Arrow", "Arrow river"),
                 ("Alne", "River Alne"),
@@ -69,8 +75,8 @@ RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshir
                 ("Carrant Brook","Carrant brook"),
                 ("Stour","Stour river"),
                 ("Isbourne","Isbourne river") ,
-                ("Snitterfield - Bell Brook","Bell Brook","Bell brook"),
-                ("Norton Lindsey - Sherbourne Brook","Sherbourne Brook","Sherbourne brook","Shaerbourne Brook", "Sherborne Brook", "Sherbourne Brook"),
+                ("Bell Brook","Bell Brook","Bell brook"),
+                ("Sherbourne Brook","Sherbourne Brook","Sherbourne brook","Shaerbourne Brook", "Sherborne Brook", "Sherbourne Brook"),
                 ("Bow Brook", "Bow brook"),
                 ("Cam Brook", "Cam brook"),
                 ("Fosseway Brook", "Fosseway brook"),
@@ -86,9 +92,12 @@ RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshir
                 ("Blockley Brook","Blockley Brook")
               ]
 
-# We map some names for consitency, include the location number if there is one (will be then stripped out)
-# Names get changed to the first one in the list
-# Note names are sometimes repeated to force case insensitive match
+
+# STEP 2
+#
+# Volunteers are varied and also not always consistent with their names, so we need to map to one for consitency,
+# include the location number if there is one (will be then stripped out). Names are checked case insenstive and then get changed
+# to the first one in the list.  For this reason will sometimes see the same repeated match to correct case for some entries.
 SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge", "Jubilee Bridge Fladbury", "Jubilee Bridge", "Jubilee"),
              ("Eckington, Bridge","400 Eckington Bridge", "Eckington Bridge","390 Eckington Bridge"),
              ("Pershore, Leisure Centre", "270 Pershore, Leisure Centre", "Leisure Centre Pershore", "Pershore Leisure Centre", "Pershore les cent 270", "Pershore Leisure Centre 270","Pershore LC 270","L centre Pershore 270","Pershore"),
@@ -115,20 +124,17 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge", "Jubil
              ("After ST outflow", "After ST outflow"),
              ("Alveston - Swiffen Bank", "Swiffen Bank", "Alveston Swiffen Bank", "Alveston Swiffen Bank","Swiffen Bank","Alveston - Swiffen Bank"),
              ("Alveston Weir", "Alveston Weir"),
-             ("Avon Smith's Meadow", "Avon Smiths Meadow", "AvonSmithsMeadow", "AvonSmith'sMeadow", "Avon  Smiths Meadow", "Avon Smith Meadow","Avon  Smith's Meadow", "AvonMeadow", "Avon meadow"),
+             ("Avon Smith's Meadow","Piddle Brook Bridge","Avon Smith's Meadow", "Avon Smiths Meadow", "AvonSmithsMeadow", "AvonSmith'sMeadow", "Avon  Smiths Meadow", "Avon Smith Meadow","Avon  Smith's Meadow", "AvonMeadow", "Avon meadow"),
              ("Barton - Heart of England Forest", "Barton","Barton"),
-             ("Black Bear","Black Bear"),
-             ("Black Bear","Black Bear"),
+             ("Tewkesbury - Black Bear Pub","Black Bear"),
              ("Brailes main road","Brailes main road"),
              ("Bredon - Bredon Marina","Bredon - Bredon Marina","Bredon Marina","Dock Lane Bredon","Dock Lane.Bredon", "Dock lane. Bredon", "Bredon docklane"),
-             ("Cam, Chimping Campden Craves", "Cam Chipping Campden Craves", "Cam Chipping Campden", "Chipping Campden Craves", "Craves Chipping Campden"),
              ("Carrant Brook, Bredon Road", "Carrant Bredon Rd", "Carrant Bredon Road", "Carrant. Bredon Road", "Carrant. Bredon Rd"),
-             ("Carrant Brook, Back", "Carrant Brook Back", "Carrant Brook Back Lane"),
              ("Carrant Brook Beckford", "Carrant Brook Beckford Back Lane"),
-             ("Carrant Brook, M5 Bridge", "Carrant Brook M5", "Carrant Brook M5 Bridge", "Carrant M5 Bridge","Carrant m5"),
+             ("Tewkesbury - M5 Bridge", "Carrant Brook, M5 Bridge", "Carrant Brook M5", "Carrant Brook M5 Bridge", "Carrant M5 Bridge","Carrant m5"),
              ("Tewkesbury - Mitton Path", "Carrant Brook, Mitton Bridge", "Carrant Mitton Bridge", "Carrant Mitton Path", "Mitton path", "Mitton parh"),
              ("Carrant Brook, Bredon Road", "Carrant Brook Bredon Rd"),
-             ("Carrant Brook, Crashmore Lane", "Carrant crashmore lane"),
+             ("Beckford - Crashmore Ln", "Carrant Brook, Crashmore Lane", "Carrant crashmore lane"),
              ("Carters Lane", "Carters Lane", "Carter Lane"),
              ("Clifford Chambers - Mill Bridge", "Clifford Chambers Mill Bridge", "Clifford Mill Bridge", "Clifford Chambers", "Clifford Chambers mill bridge", "Clifford mill bridge", "Clifford  mill bridge"),
              ("Fosseway Brook, Cross Leys", "Cross Leys", "CrossLeys", "Fosseway Brook, Cross Leys", "Fosseway Brook; Cross Leys", "Fosseway Brook; Cross Leys"),
@@ -142,11 +148,11 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge", "Jubil
              ("Hampton Wood", "Hampton Wood"),
              ("Heath Culvert", "Heath Culvert Ilmington"),
              ("Heath Gate", "Hath Gate"),
-             ("High Street Brailes", "High St Brailes", "High street", "High Street Brailes", "High Street,Brailes", "High Street, Lower Brailes"),
-             ("Ilmington Middle Street","Site 1; Ilmington Middle Street", "Ilmington Middle St", "Illmington middle st","Middle Street","Middle Street Ilmington","MiddleStreet","Site 1 ; Middle Street", "Site 1 ; Middle Street", "Site 1  ;  Middle"),
+             ("High Street Brailes", "High St Brailes", "High street", "High Street Brailes", "High Street,Brailes", "High Street, Lower Brailes","High Street Brailes","Brailes main road","Sutton Brook, High Street"),
+             ("Ilmington - Middle St", "Ilmington Middle Street","Site 1; Ilmington Middle Street", "Ilmington Middle St", "Illmington middle st","Middle Street","Middle Street Ilmington","MiddleStreet","Site 1 ; Middle Street", "Site 1 ; Middle Street", "Site 1  ;  Middle"),
              ("Winchombe - Silk Mill Ln","Isbourne"),
-             ("Langley - Ford","Langley Ford","Langley","The Ford"),
-             ("Lower Lode","Lower Lode", "Lowerl Lode"),
+             ("Langley - Ford","Langley Ford","Langley","The Ford","ford langley"),
+             ("Tewkesbury - Lower Lode Ln","Lower Lode", "Lowerl Lode"),
              ("Lucy's Mill Bridge","Lucy's Mill Bridge","Stratford-upon-Avon - Lucy`s Mill Bridge"),
              ("Luddington - Avonbank Dr","Luddington Avonbank Drive","Luddington Avonbank Drive","Luddington Avon Bank", "Luddington Avon Drive", "Avonbank Drive", "Avonbank"),
              ("Luddington Pitch","Luddington Pitch"),
@@ -156,24 +162,22 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge", "Jubil
              ("Pershore Bridges","Pershore bridges"),
              ("Pershore leisure centre","Pershore leisure centre"),
              ("Piddle Brook Long Lane Pinvin","Piddle Brook Long Lane Pinvin"),
-             ("Piddle Brook North of Radford","Piddle Brook North of Radford"),
              ("Piddle Brook Norton Beachamp Bridge", "Piddle Brook Norton Beachamp Bridge","Norton Beachamp - Bridge"),
              ("Piddle Brook Bridge","Piddle Brook Bridge", "Piddle Brook Wyre Piddle Bridge","Piddlebrook bridge", "Piddlebrook WyrePiddleBridge", "PiddleBrook-Wyre Piddle Bridge","PiddleBrookBridge","Piddlebrook Wyre piddle bridge"),
              ("Pitch 16", "Pitch 15", "Pitch 16", "Pitch16"),
              ("Preston Bagot - Brook","Preston Bagot Brook","Preston  Bagot Brook"),
              ("Preston Bagot - Canal", "Preston Bagot Canal","Preston Bigot Canal"),
-             ("Stour, Preston River Bridge", "Preston River Bridge", "Preston onStour River Bridge","Preston- on- stour river bridge", "Preston- on- stour"),
+             ("Preston on Stour - Preston Ln Bridge", "Stour, Preston River Bridge", "Preston River Bridge", "Preston onStour River Bridge","Preston- on- stour river bridge", "Preston- on- stour"),
              ("Stowe, Lower Fields Farm", "R.Stowe - Lower Fields Farm", "R.Stowe, Lower Fields Farm","R.Stowe,  Lower Fields Farm, Napton","R.Stowe,  Lower Field's Farm, Napton"),
              ("Stockton - New Zealand Spinney", "R. Stowe,New Zealand Spinney","R.Stowe, New Zealand Spinney, Stockton","R.Stowe, New Zealand Spinney","New Zealand Spinney","Stowe, New Zealand Spinney"),
              ("Stowe, Spring", "R. Stowe,Spring","R.Stowe, Spring by Howcombe Allotments, Napton","R.Stowe, Spring by Howcombe Allotments,Napton"),
-             ("Avon, Quay Lane", "River Avon at Quay Lane"),
              ("Stour, Cherington", "River Stour Cherington after sewerage works"),
              ("Tiddington - School Ln", "School Lane"),
              ("Tiddington - Carters Ln", "Carters Lane"),
              ("Severn Sailing Club","Severn Sailing Club","Seven sailing club","SSC Bedons Norton","SSC Bredon's Norton","SSC BREDONS NORTON","Bredon`s Norton - Severn Sailing Club"),
              ("Severn Trent Outflow", "Severn Trent Outflow"),
              ("Shipston - Mill Bridge", "Shipston - Mill Bridge","Shipston mill bridge"),
-             ("Site 2; Cross Leys culvert","Site 2 ; Cross Leys Culvert", "Site 2  ;  Cross"),
+             ("Site 2; Cross Leys culvert","Site 2 ; Cross Leys Culvert", "Site 2  ;  Cross","site 2; cross leys culvert"),
              ("Site 3; Severn Trent Plant","Site 3 ; Severn Trent Water Processing plant outflow", "Site 3  ;  Severn"),
              ("ST Outflow", "ST Outflow"),
              ("Stour, Ascott village","Stour Ascott village"),
@@ -187,34 +191,29 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge", "Jubil
              ("Stour, Cherington", "Stour Cherington"),
              ("Stour, Ascott", "Stour Ascott","Stout Ascott village"),
              ("Stratford Upon Avon by RSC", "Stratford upon avon by RSC"),
-             ("STW outfall Ilmington", "STW outfall Ilmington"),
              ("Sutton Brook, High Street", "Sutton Brook - High St - Brailes", "Sutton Brook - High St, Brailes", "Sutton Brook,High Street","Sutton Brook - High Street Brailes","Sutton Brook - High Street, Brailes"),
              ("Swillgate A38","Swilgate A38","Swillgate A38","Swillgate A39", "Carrant A38"),
-             ("Swillgate","Swillgate lowdilow lane"),
+             ("Tewkesbury - A38","Swillgate","Swillgate lowdilow lane"),
              ("Swillgate TNR 2nd bridge","Swillgate TNR 2nd bridge"),
-             ("Talton Lodge","Talton Lodge"),
-             ("The craves","The Craves","Th craves chipping campden"),
+             ("Newbold on Stour - Talton Lodge","Talton Lodge"),
              ("The Dell","The dell"),
              ("Twyning Quay","Twyning Fleet","Twyning key","Twyning Quay"),
              ("Walcot Lane", "Walcot Lane"),
              ("Welford-on-Avon - Boat Station", "Welford-on-Avon - Boat Station", "Warwickshire Avon, Welford Boat Station"),
              ("Welford on Avon above weir","Welford angling"),
              ("Weston-on-Avon - Duck Ln", "Weston-on-Avon - Duck Ln", "Weston on Avon", "Weston on Avon"),
-             ("Naunton Beauchamp - Bridge","Piddle Brook Norton Beauchamp Bridge"),
-             ("Church Lench Bridge", "Whitsun Brook Church Lench Bridge", "Whitson Brook, Atch","Atch", "Whistun Brook Atch", "Whitsun Brook Atch Lench Road"),
+             ("Naunton Beauchamp - Bridge","Piddle Brook Norton Beauchamp Bridge","Piddle Brook Norton Beachamp Bridge"),
+             ("Church Lench - Atch Lench Rd Bridge","Church Lench Bridge", "Whitsun Brook Church Lench Bridge", "Whitson Brook, Atch","Atch", "Whistun Brook Atch", "Whitsun Brook Atch Lench Road"),
              ("Bishampton - Abberton Rd", "Bishampton - Abberton Rd", "Bishampton","Whitsun Brook north of Bishampton"),
              ("Rous Lench Bishampton", " Rous Lench Bishampton","Whitsun Brook Rous Lench Bishampton","Rous Lench - Rd to Bishampton"),
              ("Low road, Church Lench", " Low Road, Church Lench","Whitsun Brook. Low road, Church Lench"," Rous Church Lench", "Church Lench - Low Rd","Whitsun Brook Rous Church Lench"),
              ("WyrePiddleBrook","WyrePiddleBrook"),
              ("Bubbenhall road","Bubbenhall road, Bubbenhall","Bubbenhall road","Bubbenhall","Bubenhall road"),
-             ("High Street Brailes","High Street Brailes","Brailes main road","Sutton Brook, High Street"),
              ("Stour, Shipston Mill Bridge","Stour, Shipston Mill Bridge","Stour, Mill Bridge Shipston","Stour, Shipston Mill Bridge"),
              ("Defford, Arden Sailing Club","Defford, Arden Sailing Club","Arden Sailing Club"),
-             ("Avon Smith's Meadow","Avon Smith's Meadow","Piddle Brook Bridge"),
              ("Carrant Brook, Back","Carrant Brook, Back","Carrant Brook Beckford","Carrant back lane Beckford 28/06/2024 Geoff"),
-             ("STW outfall Ilmington","STW outfall Ilmington","ST Outflow","Site 3; Severn Trent Plant","Severn Trent Outflow"),
-             ("Cam, Chimping Campden Craves","Cam, Chimping Campden Craves","The craves"),
-             ("Cam, Chimping Campden Craves","Cam, Chimping Campden Craves","The craves"),
+             ("Ilmington - Sewage Outflow", "STW outfall Ilmington","STW outfall Ilmington","ST Outflow","Site 3; Severn Trent Plant","Severn Trent Outflow"),
+             ("Chimping Campden Craves", "Cam, Chimping Campden Craves", "Cam Chipping Campden Craves", "Cam Chipping Campden", "Chipping Campden Craves", "Craves Chipping Campden","The Craves","Th craves chipping campden"),
              ("Abbots Barton", "Eastern Meadows"),
              ("Fishermans seat", "Near sluice & bench", "Fishermans seat by the stile", "Fishermans bench by the stile", "Bench near stile","Fisherman’s bench by the stile","Fisherman’s seat by the stile","Fisherman’s bench by stile","Fishermans seat"),
              ("Chilland Ford", "Chilland"),
@@ -237,34 +236,18 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge", "Jubil
              ("Marsh Cottage","Marsh cottage"),
              ("Itchen culvert","Ditch","Ditch by culvert","Culvert"),
              ("Beckford - Sewage Works","Carrant Beckford sewage works"),
-             ("Beckford - Back Ln","Back"),
-             ("Great Comberton - Quay Ln","Great Comberton Quay"),
-             ("Fladbury - Fladbury Paddle Club", "Fladbury, Paddle Club", "Fladbury Paddle Club"),
+             ("Beckford - Back Ln","Back","Carrant Brook, Back", "Carrant Brook Back", "Carrant Brook Back Lane"),
+             ("Great Comberton - Quay Ln","Great Comberton Quay","Avon, Quay Lane", "River Avon at Quay Lane"),
+             ("210 Fladbury, Paddle Club", "Fladbury - Fladbury Paddle Club", "Fladbury, Paddle Club", "Fladbury Paddle Club"),
+             ("Snitterfield - Bell Brook", "Bell Brook", "Snitterfield - Bell Brook, Bell Brook", "Bell Brook 1"),
+             ("Norton Lindsey - Sherbourne Brook","Sherbourne Brook","Shaerbourne Brook", "Sherborne Brook", "Sherbourne Brook","Sherbourne Brook 1","Shaerbourne Brook 1","Sherborne Brook 1"),
+             ("Oxbow","Oxbow","Ox bow")
            ]
 
-# Locations to exclude, useful if duplicate river name elsewhere in the country!  IN LOWER CASE
-EXCLUDE_LOCATIONS = ["beeses","conham river park upstream","conham park left pipe","conham river park downstream","priory water","melford park bridge","prysmian beat","stanford meadows","ham bridge","brambridge","st cross mill","durngate bridge","abbots barton","fishermans seat","chilland ford","upper chilland","d/s itchen abbas bridge","below itchen abbas fish farm outfall","bush inn ovington","ovington","armi sampling site opposite itchen stoke mill","water garden upper itchen","borough farm","school bridge","village green","cheriton","cheriton house","fishing bench near stile","marsh cottage","meadow lower","meadow upper","source","itchen culvert","springshot ditch"]
 
-# Some locations are missing rivers, which means they don't get merged
-# We get away with it in some instances where never have a river assigned, but some have a mix
-# Here have the location (after synonym match) and then specify the EXACT river case sensitive it is on
-MISSING_RIVERS = [
-    ("Bredon - Bredon Marina", "Warwickshire Avon"),
-    ("Fladbury Paddle Club", "Warwickshire Avon"),
-    ("Peopleton - Mill Bridge", "Bow Brook"),
-    ("Piddle Brook North of Radford", "Piddle Brook"),
-    ("Bishampton - Abberton Rd", "Whitsun Brook"),
-    ("Severn Sailing Club", "Warwickshire Avon"),
-    ("piddle brook norton beachamp bridge","Piddle Brook"),
-    ("piddle brook long lane pinvin","Piddle Brook"),
-    ("weston-on-avon - duck ln","Warwickshire Avon"),
-    ("fladbury - fladbury paddle club","Warwickshire Avon"),
-    ("stratford upon avon by rsc","Warwickshire Avon"),
-    ("pershore, leisure centre","Warwickshire Avon"),
-    ("twyning quay","Warwickshire Avon"),
-]
-
-# Locations which have a number
+# STEP 3
+# Locations which have a number or we want to give a fixed latitude and longitude
+#
 # If we find a number in the place name in spreadsheet, then try to look up that number for the river in this list first
 # Place name in table below must be the same as SYNONYMS above but without the number
 SAMPLING_LOCATIONS = [
@@ -424,6 +407,75 @@ SAMPLING_LOCATIONS = [
     ("Whitsun Brook",0,"Low road, Church Lench",52.16841,-1.96037),
     ("Whitsun Brook",0,"Rous Lench Bishampton",52.16985,-1.99032)
 ]
+
+# STEP 4
+#
+# Some locations are missing rivers, which means they don't get merged
+# We get away with it in some instances where never have a river assigned, but some have a mix
+# Here have the location (after synonym match) and then specify the EXACT river case sensitive it is on
+MISSING_RIVERS = [
+    ("Bredon - Bredon Marina", "Warwickshire Avon"),
+    ("Fladbury Paddle Club", "Warwickshire Avon"),
+    ("Peopleton - Mill Bridge", "Bow Brook"),
+    ("Piddle Brook North of Radford", "Piddle Brook","Piddle Brook North of Radford"),
+    ("Bishampton - Abberton Rd", "Whitsun Brook"),
+    ("Severn Sailing Club", "Warwickshire Avon"),
+    ("piddle brook long lane pinvin","Piddle Brook"),
+    ("weston-on-avon - duck ln","Warwickshire Avon"),
+    ("fladbury - fladbury paddle club","Warwickshire Avon"),
+    ("stratford upon avon by rsc","Warwickshire Avon"),
+    ("pershore, leisure centre","Warwickshire Avon"),
+    ("twyning quay","Warwickshire Avon"),
+    ("Norton Lindsey - Sherbourne Brook","Sherbourne Brook"),
+    ("barton - heart of england forest","Warwickshire Avon"),
+    ("welford boat station","Warwickshire Avon"),
+    ("Stockton - New Zealand Spinney","Stowe"),
+    ("rous lench bishampton","Whitsun Brook"),
+    ("Snitterfield - Bell Brook, Bell Brook","Bell Brook"),
+    ("Norton Lindsey - Sherbourne Brook, Sherbourne Brook","Sherbourne Brook"),
+    ("Naunton Beauchamp - Bridge","Piddle Brook"),
+    ("low road, church lench","Whitsun Brook"),
+    ("church lench bridge","Whitsun Brook"),
+    ("carrant back lane beckford","Carrant Brook"),
+    ("Lucy's Mill Bridge","Warwickshire Avon"),
+    ("alveston - swiffen bank","Warwickshire Avon"),
+    ("Chimping Campden Craves","Cam Brook"),
+    ("tewkesbury - abbey mill","Warwickshire Avon"),
+    ("Ilmington - Middle St","Fosseway Brook"),
+    ("Ilmington - Sewage Outflow","Fosseway Brook"),
+    ("Avon Smith's Meadow","Piddle Brook"),
+    ("Luddington - Avonbank Dr","Warwickshire Avon"),
+    ("Great Comberton - Quay Ln","Warwickshire Avon"),
+    ("Tewkesbury - Mitton Path","Carrant Brook"),
+    ("Langley - Ford","Tributary (Alne River)"),
+    ("Preston Bagot - Brook","Tributary (Alne River)"),
+    ("Chimping Campden Craves","Cam Brook"),
+    ("Clifford Chambers - Mill Bridge","Stour"),
+    ("Tiddington - School Ln","Warwickshire Avon"),
+    ("Tiddington - Carters Ln","Warwickshire Avon"),
+    ("Preston Bagot - Canal","Stratford-upon-avon canal"),
+    ("Hampton Lucy - Bridge","Warwickshire Avon"),
+    ("Barford - Hampton Wood","Warwickshire Avon"),
+    ("Newbold on Stour - Talton Lodge","Stour"),
+    ("Snitterfield - Bell Brook","Bell Brook"),
+    ("Tewkesbury - Black Bear Pub","Warwickshire Avon"),
+    ("Winchombe - Silk Mill Ln","Isbourne"),
+    ("210 fladbury, paddle club","Warwickshire Avon"),
+    ("Tewkesbury - A38","Swilgate"),
+    ("Tewkesbury - Lower Lode Ln","Warwickshire Avon"),
+    ("High Street Brailes","Sutton Brook"),
+    ("Church Lench - Atch Lench Rd Bridge","Whitsun Brook"),
+    ("Tewkesbury - M5 Bridge","Carrant Brook"),
+    ("Beckford - Sewage Works","Carrant Brook")
+]
+
+
+# STEP 5
+#
+# Locations to exclude, useful if duplicate river name elsewhere in the country!  IN LOWER CASE
+# TODO - probably also need to include river at some point?
+EXCLUDE_LOCATIONS = ["beeses","conham river park upstream","conham park left pipe","conham river park downstream","priory water","melford park bridge","prysmian beat","stanford meadows","ham bridge","brambridge","st cross mill","durngate bridge","abbots barton","fishermans seat","chilland ford","upper chilland","d/s itchen abbas bridge","below itchen abbas fish farm outfall","bush inn ovington","ovington","armi sampling site opposite itchen stoke mill","water garden upper itchen","borough farm","school bridge","village green","cheriton","cheriton house","fishing bench near stile","marsh cottage","meadow lower","meadow upper","source","itchen culvert","springshot ditch"]
+
 
 # Thresholds for graphs
 THRESHOLD_CONDUCTIVITY = 1000
