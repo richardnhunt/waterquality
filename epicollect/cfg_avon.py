@@ -110,7 +110,7 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge", "Jubil
              ("240 Cropthorne, Holland House", "Holland House", "Holland House site 240"),
              ("25 Hinton, Bridge","25 Hinton, bridge"),
              ("30 Hampton, Bridge","30 Hampton, bridge"),
-             ("108 B4510 Bridge", "200 B4510 bridge"),
+             ("108 B4035 Bridge", "108 B4510 Bridge"),
              ("245 Cropthorne Main Street, Bridge", "245 Cropthorne Main Street Bridge","Cropthorne Main Street, Bridge","Cropthorne Main Street Bridge","Main Street Cropthorne"),
              ("280 Pershore, Bridges", "Pershore bridges"),
              ("Rugby, Steam Turbine", "Rugby; Steam Turbine", "Rugby (Steam Turbine)", "Rugby Steam Turbine"),
@@ -124,7 +124,7 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge", "Jubil
              ("After ST outflow", "After ST outflow"),
              ("Alveston - Swiffen Bank", "Swiffen Bank", "Alveston Swiffen Bank", "Alveston Swiffen Bank","Swiffen Bank","Alveston - Swiffen Bank"),
              ("Alveston Weir", "Alveston Weir"),
-             ("Avon Smith's Meadow","Piddle Brook Bridge","Avon Smith's Meadow", "Avon Smiths Meadow", "AvonSmithsMeadow", "AvonSmith'sMeadow", "Avon  Smiths Meadow", "Avon Smith Meadow","Avon  Smith's Meadow", "AvonMeadow", "Avon meadow"),
+             ("Avon Smith's Meadow","Avon Smith's Meadow", "Avon Smiths Meadow", "AvonSmithsMeadow", "AvonSmith'sMeadow", "Avon  Smiths Meadow", "Avon Smith Meadow","Avon  Smith's Meadow", "AvonMeadow", "Avon meadow"),
              ("Barton - Heart of England Forest", "Barton","Barton"),
              ("Tewkesbury - Black Bear Pub","Black Bear"),
              ("Brailes main road","Brailes main road"),
@@ -250,13 +250,14 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge", "Jubil
 #
 # If we find a number in the place name in spreadsheet, then try to look up that number for the river in this list first
 # Place name in table below must be the same as SYNONYMS above but without the number
+# Note numbers are not unique but river order
 SAMPLING_LOCATIONS = [
     ("Isbourne", 25, "Hinton, Bridge", 52.063505, -1.967044),
     ("Isbourne", 30, "Hampton, Bridge", 52.085601, -1.956927),
-    ("Warwickshire Avon", 50, "B4510 bridge", 52.104597, -1.916057),
     ("Warwickshire Avon", 100, "Bidford Bridge", 52.163627, -1.856484),
     ("Warwickshire Avon", 103, "Cleeve Prior", 52.147696, -1.884128),
-    ("Badsey Brook", 108, "B4510 Bridge", 52.091779, -1.907077),
+    ("Badsey Brook", 108, "B4035 Bridge", 52.091779, -1.907077),
+    ("Badsey Brook", 200, "B4510 bridge", 52.104597, -1.916057),
     ("Elmley Brook", 245, "Cropthorne Main Street, Bridge", 52.100479, -2.007295),
     ("Warwickshire Avon", 115, "Twyford ANT landing", 52.117573, -1.930736),
     ("Warwickshire Avon", 120, "Offenham, Dead Mens Ait", 52.109891, -1.929374),
@@ -466,7 +467,11 @@ MISSING_RIVERS = [
     ("High Street Brailes","Sutton Brook"),
     ("Church Lench - Atch Lench Rd Bridge","Whitsun Brook"),
     ("Tewkesbury - M5 Bridge","Carrant Brook"),
-    ("Beckford - Sewage Works","Carrant Brook")
+    ("Beckford - Sewage Works","Carrant Brook"),
+    ("Beckford - Back Ln","Carrant Brook"),
+    ("Mill Stour, Newbold","Stour"),
+    ("wyrepiddlebrook","Piddle Brook"),
+    ("Piddle Brook Bridge","Piddle Brook")
 ]
 
 
