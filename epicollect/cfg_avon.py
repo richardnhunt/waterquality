@@ -99,7 +99,7 @@ RIVER_NAMES = [ ("Warwickshire Avon", "warwickshire avon fladbury", "warwickshir
 # include the location number if there is one (will be then stripped out). Names are checked case insenstive and then get changed
 # to the first one in the list.  For this reason will sometimes see the same repeated match to correct case for some entries.
 SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge", "Jubilee Bridge Fladbury", "Jubilee Bridge", "Jubilee"),
-             ("Eckington, Bridge","400 Eckington Bridge", "Eckington Bridge","390 Eckington Bridge"),
+             ("Eckington, Bridge","400 Eckington Bridge", "Eckington Bridge","390 Eckington Bridge","300 Eckington Bridge"),
              ("Pershore, Leisure Centre", "270 Pershore, Leisure Centre", "Leisure Centre Pershore", "Pershore Leisure Centre", "Pershore les cent 270", "Pershore Leisure Centre 270","Pershore LC 270","L centre Pershore 270","Pershore"),
              ("230 Charlton, Merry Brook", "230merry brook"),
              ("120 Offenham, Dead Mens Ait", "120a offenham Dead Mens Ait (opp)"),
@@ -111,14 +111,14 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge", "Jubil
              ("25 Hinton, Bridge","25 Hinton, bridge"),
              ("30 Hampton, Bridge","30 Hampton, bridge"),
              ("108 B4035 Bridge", "108 B4510 Bridge"),
-             ("245 Cropthorne Main Street, Bridge", "245 Cropthorne Main Street Bridge","Cropthorne Main Street, Bridge","Cropthorne Main Street Bridge","Main Street Cropthorne"),
+             ("245 Cropthorne Main Street, Bridge", "245 Cropthorne Main Street Bridge","Cropthorne Main Street, Bridge","Cropthorne Main Street Bridge","Main Street Cropthorne", "Cropthorne Main Street"),
              ("280 Pershore, Bridges", "Pershore bridges"),
              ("Rugby, Steam Turbine", "Rugby; Steam Turbine", "Rugby (Steam Turbine)", "Rugby Steam Turbine"),
              ("Barford Below","Barford B"),
              ("Barford Above","Barford A"),
              ("100 Bidford Bridge", "Bidford 100"),
              ("Priory Water","Priory water"),
-             ("305 Mary Brook","305 Mary Brook","305","Comberton to Pershore Road Bridge","Great Comberton to Pershore"),
+             ("305 Mary Brook","305 Mary Brook","305","Comberton to Pershore Road Bridge","Great Comberton to Pershore","305"),
              ("Tewkesbury - Abbey Mill", "Abbey Mill"),
              ("After sewage works", "After sewage works"),
              ("After ST outflow", "After ST outflow"),
@@ -241,7 +241,9 @@ SYNONYMS = [ ("220 Fladbury, Jubilee Bridge", "fladbury, Jubilee Bridge", "Jubil
              ("210 Fladbury, Paddle Club", "Fladbury - Fladbury Paddle Club", "Fladbury, Paddle Club", "Fladbury Paddle Club"),
              ("Snitterfield - Bell Brook", "Bell Brook", "Snitterfield - Bell Brook, Bell Brook", "Bell Brook 1"),
              ("Norton Lindsey - Sherbourne Brook","Sherbourne Brook","Shaerbourne Brook", "Sherborne Brook", "Sherbourne Brook","Sherbourne Brook 1","Shaerbourne Brook 1","Sherborne Brook 1"),
-             ("Oxbow","Oxbow","Ox bow")
+             ("Oxbow","Oxbow","Ox bow"),
+             ("Chadbury, Whitehouse farm right of pumphouse", "201 Whitehouse farm right of pumphouse"),
+             ("Chadbury, Whitehouse farm left of pumphouse", "202 Whitehouse farm left of pumphouse")
            ]
 
 
