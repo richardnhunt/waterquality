@@ -47,14 +47,15 @@ COL_SAFE_PLACE = 4 # e.g. Avon River - Tewkesbury - Black Bear Pub
 COL_SAFE_LAT = 6
 COL_SAFE_LONG = 7
 COL_SAFE_TIME = 14 # e.g. 10:00
-COL_SAFE_RIVER_HEIGHT = 22
+COL_SAFE_RIVER_HEIGHT = 24
 COL_SAFE_CONDUCTIVITY = 16
 COL_SAFE_TEMPERATURE = 17
-COL_SAFE_PHOSPHATES_HI = 20 # use whichever column has number in it, prefer hi
-COL_SAFE_PHOSPHATES_LO = 21 # lo range phosphates
-COL_SAFE_NITRATES = 18 # e.g. "10" or "0, 5" or "I did not take a nitrate measurement."
+COL_SAFE_PHOSPHATES_HI = 22 # use whichever column has number in it, prefer hi
+COL_SAFE_PHOSPHATES_LO = 23 # lo range phosphates
+COL_SAFE_NITRATES_HACH = 19 # e.g. "10" or "0, 5" or "I did not take a nitrate measurement."
+COL_SAFE_NITRATES_WW = 20 # e.g. "10" or "0, 5" or "I did not take a nitrate measurement."
 COL_SAFE_AMMONIA = None
-COL_SAFE_NOTES = 25
+COL_SAFE_NOTES = 27
 
 # STEP 1
 #

@@ -41,7 +41,7 @@ cfg = None
 # INTERNAL DATE
 ###############
 
-InputColumns = namedtuple('Columns', 'NAME DATE TIME RIVER PLACE LAT LONG RIVER_HEIGHT CONDUCTIVITY TEMPERATURE PHOSPHATES_HI PHOSPHATES_LO NITRATES AMMONIA NOTES')
+InputColumns = namedtuple('Columns', 'NAME DATE TIME RIVER PLACE LAT LONG RIVER_HEIGHT CONDUCTIVITY TEMPERATURE PHOSPHATES_HI PHOSPHATES_LO NITRATES_HACH NITRATES_WW AMMONIA NOTES')
 
 SampleEntry = namedtuple('SampleEntry', 'name date time river place latitude longitude river_height reading_conductivity reading_temperature reading_phosphates reading_nitrates reading_ammonia reading_notes')
 
@@ -244,9 +244,14 @@ def read_river_data(csv_file, columns):
                 reading_phosphates_lo = float(row[columns.PHOSPHATES_LO]) if row[columns.PHOSPHATES_LO] else 0
                 reading_phosphates = reading_phosphates_hi if reading_phosphates_hi > 0 else reading_phosphates_lo
                 try:
-                    reading_nitrates = float(row[columns.NITRATES]) if row[columns.NITRATES] else 0
+                    reading_nitrates = float(row[columns.NITRATES_HACH]) if row[columns.NITRATES_HACH] else 0
                 except:
-                    reading_nitrates = 5 if row[columns.NITRATES] == '0, 5' else 0
+                    reading_nitrates = 5 if row[columns.NITRATES_HACH] == '0, 5' else 0
+                if reading_nitrates == 0:
+                    try:
+                        reading_nitrates = float(row[columns.NITRATES_WW]) if row[columns.NITRATES_WW] else 0
+                    except:
+                        reading_nitrates = 5 if row[columns.NITRATES_WW] == '0, 5' else 0
                 if columns.AMMONIA == None:
                     reading_ammonia = 0
                 else:
@@ -326,15 +331,15 @@ def main():
 
     if hasattr(cfg, "INPUT_CSV_FILENAME"):
         print(f"------ Processing WQMN {cfg.INPUT_CSV_FILENAME} -----")
-        read_river_data(cfg.INPUT_CSV_FILENAME, InputColumns(cfg.COL_NAME, cfg.COL_DATE, cfg.COL_TIME, cfg.COL_RIVER, cfg.COL_PLACE, cfg.COL_LAT, cfg.COL_LONG, cfg.COL_RIVER_HEIGHT, cfg.COL_CONDUCTIVITY, cfg.COL_TEMPERATURE, cfg.COL_PHOSPHATES, cfg.COL_PHOSPHATES, cfg.COL_NITRATES, cfg.COL_AMMONIA, cfg.COL_NOTES))
+        read_river_data(cfg.INPUT_CSV_FILENAME, InputColumns(cfg.COL_NAME, cfg.COL_DATE, cfg.COL_TIME, cfg.COL_RIVER, cfg.COL_PLACE, cfg.COL_LAT, cfg.COL_LONG, cfg.COL_RIVER_HEIGHT, cfg.COL_CONDUCTIVITY, cfg.COL_TEMPERATURE, cfg.COL_PHOSPHATES, cfg.COL_PHOSPHATES, cfg.COL_NITRATES, cfg.COL_SAFEORG_NITRATES, cfg.COL_AMMONIA, cfg.COL_NOTES))
     
     if hasattr(cfg, "SAFEORG_CSV_FILENAME"):
         print(f"------ Processing original SAFEAVON {cfg.SAFEORG_CSV_FILENAME} -----")
-        read_river_data(cfg.SAFEORG_CSV_FILENAME, InputColumns(cfg.COL_SAFEORG_NAME, cfg.COL_SAFEORG_DATE, cfg.COL_SAFEORG_TIME, cfg.COL_SAFEORG_RIVER, cfg.COL_SAFEORG_PLACE, cfg.COL_SAFEORG_LAT, cfg.COL_SAFEORG_LONG, cfg.COL_SAFEORG_RIVER_HEIGHT, cfg.COL_SAFEORG_CONDUCTIVITY, cfg.COL_SAFEORG_TEMPERATURE, cfg.COL_SAFEORG_PHOSPHATES, cfg.COL_SAFEORG_PHOSPHATES, cfg.COL_SAFEORG_NITRATES, cfg.COL_SAFEORG_AMMONIA, cfg.COL_SAFEORG_NOTES))
+        read_river_data(cfg.SAFEORG_CSV_FILENAME, InputColumns(cfg.COL_SAFEORG_NAME, cfg.COL_SAFEORG_DATE, cfg.COL_SAFEORG_TIME, cfg.COL_SAFEORG_RIVER, cfg.COL_SAFEORG_PLACE, cfg.COL_SAFEORG_LAT, cfg.COL_SAFEORG_LONG, cfg.COL_SAFEORG_RIVER_HEIGHT, cfg.COL_SAFEORG_CONDUCTIVITY, cfg.COL_SAFEORG_TEMPERATURE, cfg.COL_SAFEORG_PHOSPHATES, cfg.COL_SAFEORG_PHOSPHATES, cfg.COL_SAFEORG_NITRATES, cfg.COL_SAFEORG_NITRATES, cfg.COL_SAFEORG_AMMONIA, cfg.COL_SAFEORG_NOTES))
 
     if hasattr(cfg, "SAFEAVON_CSV_FILENAME"):
         print(f"------ Processing new SAFEAVON{cfg.SAFEAVON_CSV_FILENAME} -----")
-        read_river_data(cfg.SAFEAVON_CSV_FILENAME, InputColumns(cfg.COL_SAFE_NAME, cfg.COL_SAFE_DATE, cfg.COL_SAFE_TIME, cfg.COL_SAFE_RIVER, cfg.COL_SAFE_PLACE, cfg.COL_SAFE_LAT, cfg.COL_SAFE_LONG, cfg.COL_SAFE_RIVER_HEIGHT, cfg.COL_SAFE_CONDUCTIVITY, cfg.COL_SAFE_TEMPERATURE, cfg.COL_SAFE_PHOSPHATES_HI, cfg.COL_SAFE_PHOSPHATES_LO, cfg.COL_SAFE_NITRATES, cfg.COL_SAFE_AMMONIA, cfg.COL_SAFE_NOTES))
+        read_river_data(cfg.SAFEAVON_CSV_FILENAME, InputColumns(cfg.COL_SAFE_NAME, cfg.COL_SAFE_DATE, cfg.COL_SAFE_TIME, cfg.COL_SAFE_RIVER, cfg.COL_SAFE_PLACE, cfg.COL_SAFE_LAT, cfg.COL_SAFE_LONG, cfg.COL_SAFE_RIVER_HEIGHT, cfg.COL_SAFE_CONDUCTIVITY, cfg.COL_SAFE_TEMPERATURE, cfg.COL_SAFE_PHOSPHATES_HI, cfg.COL_SAFE_PHOSPHATES_LO, cfg.COL_SAFE_NITRATES_HACH, cfg.COL_SAFE_NITRATES_WW,cfg.COL_SAFE_AMMONIA, cfg.COL_SAFE_NOTES))
 
     global_limits = calculate_global_limits(sampling_data)
     active_list = defaultdict(list)
