@@ -423,7 +423,7 @@ def main():
                             file.write(BLUE_MARKER)
                         file.write('          <name></name>\n')
                         file.write('          <description><![CDATA[\n')
-                        file.write('            <img src="' + filename + '.png" alt="' + filename + '" width="594" height="446">\n')
+                        file.write('            <img src="https://mycloudbase.com/avonvale/' + filename.replace(" ", "%20") + '.png" alt="' + filename + '" width="594" height="446">\n')
                         file.write('          ]]></description>\n')
                         file.write('          <Point>\n')
                         file.write('            <coordinates>' + str(longitude) + ',' + str(latitude) + ',0</coordinates>\n')

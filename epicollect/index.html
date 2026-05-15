@@ -4,18 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>River Pollution Levels - River Avon and friends</title>
+
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet/dist/leaflet.css"
+    />
+
     <style>
-        /* General Styling */
+        /* Let popup expand to fit content */
+        .leaflet-popup-content {
+            max-width: none !important;
+            width: auto !important;
+        }
+
+        /* Prevent Leaflet from constraining popup container */
+        .leaflet-popup {
+            max-width: none !important;
+        }
+
+        /* Make image define popup size */
+        .leaflet-popup-content img {
+            display: block;
+            height: auto;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            color: #333;
-            line-height: 1.6;
             background-color: #f4f4f4;
+            color: #333;
         }
-        
-        /* Page container */
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -24,105 +45,142 @@
 
         h1 {
             color: #2c5e4e;
-            font-size: 2em;
             text-align: center;
-            padding: 10px 0;
-        }
-
-        p {
-            font-size: 1.1em;
-            color: #555;
-            margin-bottom: 20px;
-            text-align: left;
         }
 
         ul li {
             background: #e7f5f0;
             padding: 10px;
             margin-bottom: 10px;
-            font-size: 1.1em;
-            color: #333;
         }
 
-        ul li b {
-            color: #2c5e4e;
-        }
-
-        /* Styling for the map container */
         #map {
             height: 800px;
             width: 100%;
-            margin-top: 30px;
+            margin-top: 20px;
             border: 1px solid #ccc;
         }
 
         a {
             color: #2c5e4e;
-            text-decoration: none;
             font-weight: bold;
-        }
-
-        a:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>River Sampling</h1>
-        Volunteers regulary sample the Avon and its tributaries for the following:
-        <ul>
-            <li>Water quality checks (phosphates, nitrates, ammonia, conductivity)
-            <li>Weekly water bacteria checks (e-coli, intestinal enterocci, culiforms)
-        </ul>
-        <p>For some known outfall locations into the Avon, please refer to <a href="https://www.google.co.uk/maps/@52.1412473,-2.1981324,10z/data=!4m2!6m1!1s1gG-L06hy_oDEqmKIlBoWtjHh6odRkLY?entry=ttu&g_ep=EgoyMDI0MTAwMi4xIKXMDSoASAFQAw%3D%3D" target="_blank">this map here</a>.  It will open in a new tab and you can click the different source types down the left (or clicking at the bottom if looking using a mobile phone).</p>
-    </div>
 
-    <div class="container">
-        <h1>Water quality checks</h1>
-        <p>The map below shows sampling results taken by volunteers of the <a href="https://avonvaleriver.org/">Avonvale River Action Group</a>, <a href="https://safeavon.org.uk/">Safe Avon</a>, <a href="https://anglingtrust.net/get-involved/anglers-against-pollution/wqmn/">Angling Trust</a>, and other concerned groups in the area. The graphs below are then generated from an export of that data with an expectation to update them here monthly.</p>
+<div class="container">
+    <h1>River Sampling</h1>
 
-        <p>This data should not be used to determine river safety but instead viewed as an indicator of general trends in river health.</p>
+    <ul>
+        <li><b>Water quality checks</b> (phosphates, nitrates, ammonia, conductivity)</li>
+        <li><b>Bacteria checks</b> (e-coli, enterococci, coliforms)</li>
+    </ul>
+</div>
 
-        <p>Three key pollutants are displayed when you click on a location, along with a "good" threshold for comparison.  These dashed horizontal line thresholds are derived from a variety of sources and are for indicative purposes only.</p></p>
-        
-        <ul>
-            <li><b>Conductivity</b> measurements reflect the amount of dissolved salts and minerals in the river, with higher levels often indicating pollution from urban runoff, industrial discharge, or agricultural activities, which can impact water quality and aquatic life.
-            <li><b>Phosphates</b> often stem from fertilizers, detergents, and wastewater, and elevated levels contribute to harmful algal blooms, disrupting the ecosystem and water quality.
-            <li><b>Nitrates</b> in rivers primarily come from agricultural runoff and sewage, and high levels can lead to excessive algae growth, depleting oxygen and harming aquatic life.
-            <li><b>Ammonia</b> often indicates pollution from agricultural runoff, sewage, or industrial waste, signaling poor water quality and potential harm to aquatic life. Elevated ammonia levels can pose health risks to humans.
-        </ul>
-        
-        <p>For reasons of graph visibility, conductivity readings are clipped at 3000</p>
-        
-        <div id="map"></div>
-    </div>
+<div class="container">
+    <h1>Water quality checks</h1>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARigvk6jK0d5Qg-MiGbGtRhInADRvtT6g"></script>
-    <script>
-        function initMap() {
-            // Create the map centered on a default location (latitude, longitude)
-            var map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat:  52.108816, lng:  -2.000528 },
-                zoom: 10
+    <div id="map"></div>
+</div>
+
+<!-- Leaflet -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- toGeoJSON -->
+<script src="https://unpkg.com/@tmcw/togeojson@5/dist/togeojson.umd.js"></script>
+
+<script>
+async function initMap() {
+
+    const map = L.map('map').setView([52.1, -2.0], 10);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const kml_url =
+        "https://mycloudbase.com/avonvale/river_overview.kml?dummy=" +
+        Date.now();
+
+    const res = await fetch(kml_url);
+    const text = await res.text();
+
+    const parser = new DOMParser();
+    const kml = parser.parseFromString(text, "text/xml");
+
+    const geojson = toGeoJSON.kml(kml);
+
+    const layer = L.geoJSON(geojson, {
+
+        pointToLayer: function (feature, latlng) {
+
+            const props = feature.properties || {};
+
+            let iconUrl = null;
+
+            // Try to extract icon from KML-style field
+            if (props.icon || props.styleUrl) {
+
+                const style = props.icon || props.styleUrl;
+
+                // KML icon URL usually contains colour name
+                if (style.includes("blu")) iconUrl =
+                    "https://maps.google.com/mapfiles/kml/paddle/blu-circle.png";
+
+                else if (style.includes("red")) iconUrl =
+                    "https://maps.google.com/mapfiles/kml/paddle/red-circle.png";
+
+                else if (style.includes("grn")) iconUrl =
+                    "https://maps.google.com/mapfiles/kml/paddle/grn-circle.png";
+
+                else if (style.includes("ylw")) iconUrl =
+                    "https://maps.google.com/mapfiles/kml/paddle/ylw-circle.png";
+            }
+
+            // Default marker if nothing found
+            if (!iconUrl) iconUrl =
+                "https://maps.google.com/mapfiles/kml/paddle/wht-circle.png";
+
+            const icon = L.icon({
+                iconUrl: iconUrl,
+                iconSize: [32, 32],
+                iconAnchor: [16, 16],
+                popupAnchor: [0, -16]
             });
 
-            var kml_url = "https://mycloudbase.com/avonvale/river_overview.kml?dummy="+(new Date()).getTime();
-            var kmlLayer = new google.maps.KmlLayer({
-                url: kml_url,
-                map: map
-            });
+            return L.marker(latlng, { icon: icon });
+        },
+
+        onEachFeature: (feature, layer) => {
+
+            const props = feature.properties || {};
+
+            const name = props.name || "";
+
+            let desc = props.description || "";
+
+            if (typeof desc !== "string") {
+                desc = desc?.value || JSON.stringify(desc);
+            }
+
+            layer.bindPopup(
+                `<h3>${name}</h3>${desc}`
+            );
         }
-    </script>
 
+    }).addTo(map);
+
+    map.fitBounds(layer.getBounds());
+}
+
+window.onload = initMap;
+</script>
     <div class="container">
         <h1>Weekly bacteria watch</h1>
         <p>For 2025/2026 Avonvale River Action Group secured funding from <a href="https://www.sas.org.uk/">Surfers against Sewage</a> to allow us to monitor bacteria levels in the river as well.  You can find these <a href="https://avonbacteria.bernielabs.co.uk/">e-coli and enterocci results here</a>.</p>
     </div>
 
-
-</body>
-<body onload="initMap()">
-    <div id="map"></div>
 </body>
 </html>
